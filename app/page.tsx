@@ -103,16 +103,16 @@ export default function Home() {
             <h2>CONSTRUIS<br /><em>LA PROCHAINE CHASSE</em></h2>
           </div>
           <p>
-            Explore les dernières sorties, filtre les studios et compose une
-            sélection pour le prochain live. Le catalogue se met à jour via une
-            API spécialisée et conserve une sélection Celsius si le flux est indisponible.
+            Crée ta session, choisis parmi plus de 2 000 machines, renseigne les
+            mises puis ouvre les bonus. Gains, multiplicateurs, profit et break-even
+            se recalculent en direct et restent sauvegardés sur ton appareil.
           </p>
         </div>
         <BonusHuntBoard />
         <div className="hunt-howto">
-          <article><span>01</span><h3>REPÈRE</h3><p>Filtre les nouveautés par studio et compare les données disponibles.</p></article>
-          <article><span>02</span><h3>COMPOSE</h3><p>Ajoute tes machines favorites à la sélection du prochain Bonus Hunt.</p></article>
-          <article><span>03</span><h3>SUIS LE LIVE</h3><p>Retrouve la chasse complète et son ouverture sur la chaîne Rumble.</p></article>
+          <article><span>01</span><h3>CRÉE TON HUNT</h3><p>Donne-lui un nom et fixe le montant de départ à ne pas dépasser.</p></article>
+          <article><span>02</span><h3>AJOUTE TES BONUS</h3><p>Recherche chaque machine dans le catalogue et note la mise associée.</p></article>
+          <article><span>03</span><h3>OUVRE & SUIS</h3><p>Saisis les gains : le tableau calcule instantanément toutes les statistiques.</p></article>
         </div>
       </section>
 
