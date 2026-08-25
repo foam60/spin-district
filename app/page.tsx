@@ -1,10 +1,11 @@
 import Image from 'next/image';
 
 const affiliateUrl =
-  process.env.NEXT_PUBLIC_CELSIUS_AFFILIATE_URL ?? 'https://celsiuscasino.com/';
+  process.env.NEXT_PUBLIC_CELSIUS_AFFILIATE_URL ?? 'https://celsius.games/UOpYoHXSoi';
 const discordUrl =
   process.env.NEXT_PUBLIC_DISCORD_URL ?? 'https://discord.com/';
-const streamUrl = process.env.NEXT_PUBLIC_STREAM_URL ?? '#live';
+const streamUrl =
+  process.env.NEXT_PUBLIC_STREAM_URL ?? 'https://rumble.com/c/c-7946190?e9s=src_v1_cbl';
 
 function ArrowIcon() {
   return <span aria-hidden="true">↗</span>;
@@ -53,12 +54,15 @@ export default function Home() {
             <div className="partner-topline">
               <span>CASINO PARTENAIRE</span><span className="status-dot">EN LIGNE</span>
             </div>
-            <div className="celsius-wordmark"><span className="celsius-mark">C</span><strong>CELSIUS</strong></div>
-            <p>Accède à la plateforme via le lien officiel de Spin District.</p>
+            <div className="celsius-wordmark">
+              <Image src="/celsius-icon.png" alt="Logo Celsius Casino" width={58} height={58} />
+              <strong>CELSIUS<small>CASINO</small></strong>
+            </div>
+            <p>Profite de l’offre de bienvenue via le lien officiel de Spin District.</p>
             <ul>
-              <li><span>01</span> Inscription via le lien partenaire</li>
-              <li><span>02</span> Consulte l’offre disponible</li>
-              <li><span>03</span> Rejoins les sessions de la communauté</li>
+              <li><span>01</span> Premier dépôt de 20 € remboursé*</li>
+              <li><span>02</span> Jusqu’à 550 % de bonus de bienvenue*</li>
+              <li><span>03</span> Free spins offerts selon l’offre active*</li>
             </ul>
             <a href={affiliateUrl} target="_blank" rel="sponsored noreferrer">Accéder au casino <ArrowIcon /></a>
           </div>
@@ -73,35 +77,36 @@ export default function Home() {
       <section className="partner-section section-shell" id="offre">
         <div className="section-heading">
           <div><span className="section-index">01 — PARTENAIRE</span><h2>TON ACCÈS AU<br /><em>DISTRICT</em></h2></div>
-          <p>
-            Découvre Celsius Casino depuis notre lien partenaire. Les offres
-            actives, critères d’éligibilité et conditions de mise sont toujours
-            affichés directement sur le site du casino.
-          </p>
+          <p>Découvre Celsius Casino depuis le lien Spin District : premier dépôt de 20 € remboursé, jusqu’à 550 % de bonus et des free spins offerts selon l’offre active.*</p>
         </div>
+        <a className="celsius-offer-banner" href={affiliateUrl} target="_blank" rel="sponsored noreferrer">
+          <Image src="/celsius-550.png" alt="Celsius Casino — bonus de bienvenue jusqu’à 550 %" width={2640} height={480} />
+          <span><Image src="/celsius-icon.png" alt="" width={44} height={44} /> Profiter de l’offre <ArrowIcon /></span>
+        </a>
         <div className="benefit-grid">
-          <article><span className="benefit-number">01</span><h3>UN LIEN DIRECT</h3><p>Un accès simple au partenaire officiel de la chaîne, sans détour.</p></article>
-          <article><span className="benefit-number">02</span><h3>DES SESSIONS LIVE</h3><p>Suis les bonus hunts, les challenges et les temps forts en direct.</p></article>
+          <article><span className="benefit-number">01</span><h3>20 € REMBOURSÉS*</h3><p>Ton premier dépôt de 20 € est remboursé via l’offre Spin District.</p></article>
+          <article><span className="benefit-number">02</span><h3>550 % + FREE SPINS*</h3><p>Un bonus de bienvenue renforcé et des tours gratuits selon les conditions actives.</p></article>
           <article className="benefit-featured">
             <span className="benefit-number">03</span><h3>UNE COMMUNAUTÉ</h3>
             <p>Partage l’expérience avec le District sur Discord avant et après les lives.</p>
             <a href={discordUrl} target="_blank" rel="noreferrer">Rejoindre Discord <ArrowIcon /></a>
           </article>
         </div>
+        <p className="offer-terms">*Offre réservée aux personnes majeures, soumise à éligibilité et aux conditions, limites et exigences de mise affichées par Celsius Casino. Les bonus ne garantissent aucun gain.</p>
       </section>
 
       <section className="live-section section-shell" id="live">
         <div className="section-heading compact">
           <div><span className="section-index">02 — LE LIVE</span><h2>DERNIERS<br /><em>FORMATS</em></h2></div>
-          <a className="text-link" href={streamUrl}>Voir la chaîne <ArrowIcon /></a>
+          <a className="text-link" href={streamUrl} target="_blank" rel="noreferrer">Voir la chaîne Rumble <ArrowIcon /></a>
         </div>
         <div className="content-grid">
-          <a className="content-card content-card-large" href={streamUrl}>
+          <a className="content-card content-card-large" href={streamUrl} target="_blank" rel="noreferrer">
             <Image src="/bonus-hunt.png" alt="Bonus Hunt Spin District, départ à 1 500 euros" fill sizes="(max-width: 800px) 100vw, 66vw" />
             <span className="card-shade" /><div className="card-label"><i /> Bonus Hunt</div>
             <div className="card-copy"><p>DERNIÈRE SESSION</p><h3>LA CHASSE<br />EST OUVERTE.</h3><span>Regarder maintenant <ArrowIcon /></span></div>
           </a>
-          <a className="content-card" href={streamUrl}>
+          <a className="content-card" href={streamUrl} target="_blank" rel="noreferrer">
             <Image src="/wager-challenge.png" alt="Wager Challenge Spin District" fill sizes="(max-width: 800px) 100vw, 34vw" />
             <span className="card-shade" /><div className="card-label"><i /> Challenge</div>
             <div className="card-copy small"><p>FORMAT COMMUNAUTÉ</p><h3>WAGER<br />CHALLENGE</h3><span>Découvrir <ArrowIcon /></span></div>

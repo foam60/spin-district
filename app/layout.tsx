@@ -3,7 +3,8 @@ import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://spin-district.chatgpt.site',
+    process.env.NEXT_PUBLIC_SITE_URL ??
+      'https://spin-district.sandra-mousse-sm.chatgpt.site',
   ),
   title: 'Spin District — Live, slots & bonus hunts',
   description: 'Spin District : sessions casino en direct, bonus hunts, challenges et communauté.',
