@@ -6,6 +6,7 @@ export type SlotRelease = {
   volatility: string | null;
   maxWin: number | null;
   releaseDate: string | null;
+  thumbnailUrl?: string | null;
 };
 
 // Sélection de secours relevée sur la page « Nouveaux jeux » de Celsius.

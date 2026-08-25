@@ -11,6 +11,7 @@ type ExternalSlot = {
   rtp?: unknown;
   volatility?: unknown;
   last_checked_at?: unknown;
+  thumbnail_url?: unknown;
 };
 
 function text(value: unknown) {
@@ -43,6 +44,9 @@ function normalize(slot: ExternalSlot, index: number): SlotRelease | null {
     volatility: text(slot.volatility),
     maxWin: null,
     releaseDate: text(slot.last_checked_at),
+    thumbnailUrl: text(slot.thumbnail_url)
+      ? new URL(text(slot.thumbnail_url)!, CATALOG_URL).toString()
+      : null,
   };
 }
 

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { fallbackSlots, type SlotRelease } from '../data/slots';
 
-type HuntEntry = { id: string; slotId: string; name: string; provider: string; bet: number; gain: number | null; collected: boolean };
+type HuntEntry = { id: string; slotId: string; name: string; provider: string; thumbnailUrl?: string | null; bet: number; gain: number | null; collected: boolean };
 type Hunt = { id: string; title: string; startAmount: number; currency: 'EUR'; createdAt: string; entries: HuntEntry[] };
 type StoredState = { hunts: Hunt[]; activeId: string | null };
 const STORAGE_KEY = 'spin-district-hunts-v2';
@@ -85,7 +85,7 @@ export default function BonusHuntBoard() {
   function addSlot(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!selectedSlot || !activeHunt) return;
-    const entry: HuntEntry = { id: uid(), slotId: selectedSlot.id, name: selectedSlot.name, provider: selectedSlot.provider, bet: Math.max(.01, safeNumber(bet)), gain: null, collected: false };
+    const entry: HuntEntry = { id: uid(), slotId: selectedSlot.id, name: selectedSlot.name, provider: selectedSlot.provider, thumbnailUrl: selectedSlot.thumbnailUrl, bet: Math.max(.01, safeNumber(bet)), gain: null, collected: false };
     updateActive((hunt) => ({ ...hunt, entries: [...hunt.entries, entry] })); setShowAdd(false);
   }
   function patchEntry(id: string, patch: Partial<HuntEntry>) {
@@ -126,7 +126,7 @@ export default function BonusHuntBoard() {
     <div className="hunt-slots-panel">
       <div className="hunt-panel-title"><div><span>TABLEAU DE SESSION</span><h3>DÉTAIL DES SLOTS <em>({entries.length})</em></h3></div><button type="button" className="hunt-button-primary" onClick={openAdd}>+ Ajouter une slot</button></div>
       {entries.length ? <div className="hunt-session-table-wrap"><table className="hunt-session-table"><thead><tr><th>Slot</th><th>Provider</th><th>Mise</th><th>Statut</th><th>Gain</th><th>Multi.</th><th>Action</th></tr></thead><tbody>{entries.map((entry) => <tr key={entry.id}>
-        <td><strong>{entry.name}</strong></td><td>{entry.provider}</td>
+        <td><span className="slot-identity"><SlotThumb src={entry.thumbnailUrl} name={entry.name} /><strong>{entry.name}</strong></span></td><td>{entry.provider}</td>
         <td><label className="compact-input"><input aria-label={`Mise ${entry.name}`} inputMode="decimal" value={entry.bet} onChange={(event) => patchEntry(entry.id, { bet: Math.max(.01, safeNumber(event.target.value)) })} /><span>€</span></label></td>
         <td><button className={entry.collected ? 'status collected' : 'status pending'} type="button" onClick={() => patchEntry(entry.id, { collected: !entry.collected })}>{entry.collected ? '◎ Collecté' : '○ En attente'}</button></td>
         <td><label className="compact-input gain"><input aria-label={`Gain ${entry.name}`} inputMode="decimal" placeholder="0,00" value={entry.gain ?? ''} onChange={(event) => patchEntry(entry.id, { gain: event.target.value === '' ? null : safeNumber(event.target.value), collected: event.target.value !== '' })} /><span>€</span></label></td>
@@ -138,12 +138,18 @@ export default function BonusHuntBoard() {
     {showAdd && <div className="hunt-modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setShowAdd(false)}><form className="hunt-modal hunt-add-modal" onSubmit={addSlot}>
       <button className="modal-close" type="button" aria-label="Fermer" onClick={() => setShowAdd(false)}>×</button><div className="modal-heading"><span>+</span><div><h3>AJOUTER UNE SLOT</h3><p>{catalogLoading ? 'Chargement du catalogue…' : `${catalog.length.toLocaleString('fr-FR')} machines disponibles`}</p></div></div>
       <div className="catalog-tools"><label><span>⌕</span><input autoFocus placeholder="Rechercher une machine" value={query} onChange={(event) => { setQuery(event.target.value); setVisibleLimit(60); }} /></label><select value={provider} onChange={(event) => { setProvider(event.target.value); setVisibleLimit(60); }}>{providers.map((item) => <option key={item}>{item}</option>)}</select></div>
-      <div className="catalog-results">{filteredCatalog.slice(0, visibleLimit).map((slot) => <button type="button" key={slot.id} className={selectedSlot?.id === slot.id ? 'selected' : ''} onClick={() => setSelectedSlot(slot)}><span><strong>{slot.name}</strong><small>{slot.provider}{slot.rtp ? ` · RTP ${slot.rtp}%` : ''}</small></span><b>{selectedSlot?.id === slot.id ? '✓' : '+'}</b></button>)}{filteredCatalog.length === 0 && <p>Aucune slot trouvée.</p>}</div>
+      <div className="catalog-results">{filteredCatalog.slice(0, visibleLimit).map((slot) => <button type="button" key={slot.id} className={selectedSlot?.id === slot.id ? 'selected' : ''} onClick={() => setSelectedSlot(slot)}><SlotThumb src={slot.thumbnailUrl} name={slot.name} large /><span><strong>{slot.name}</strong><small>{slot.provider}{slot.rtp ? ` · RTP ${slot.rtp}%` : ''}</small></span><b>{selectedSlot?.id === slot.id ? '✓' : '+'}</b></button>)}{filteredCatalog.length === 0 && <p>Aucune slot trouvée.</p>}</div>
       {filteredCatalog.length > visibleLimit && <button className="catalog-more" type="button" onClick={() => setVisibleLimit((limit) => limit + 80)}>Afficher plus ({filteredCatalog.length - visibleLimit})</button>}
       <div className="selected-slot-row"><div><span>Slot sélectionnée</span><strong>{selectedSlot?.name ?? 'Choisis une machine ci-dessus'}</strong></div><label><span>Mise</span><span className="modal-money-input"><input inputMode="decimal" value={bet} onChange={(event) => setBet(event.target.value)} /><b>€</b></span></label></div>
       <div className="modal-actions"><button type="button" onClick={() => setShowAdd(false)}>Annuler</button><button className="confirm" type="submit" disabled={!selectedSlot}>Ajouter au hunt</button></div>
     </form></div>}
   </div>;
+}
+
+function SlotThumb({ src, name, large = false }: { src?: string | null; name: string; large?: boolean }) {
+  return <span className={`slot-thumb${large ? ' large' : ''}`} data-initial={name.slice(0, 1).toUpperCase()} aria-hidden="true">
+    {src && <img src={src} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />}
+  </span>;
 }
 
 type CreateModalProps = { title: string; startAmount: string; setTitle: (value: string) => void; setStartAmount: (value: string) => void; onClose: () => void; onSubmit: (event: React.FormEvent<HTMLFormElement>) => void };
