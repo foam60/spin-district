@@ -58,6 +58,8 @@ async function fetchPage(page: number) {
   return (await response.json()) as ExternalSlot[];
 }
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const pages = await Promise.all(Array.from({ length: PAGE_COUNT }, (_, page) => fetchPage(page)));

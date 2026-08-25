@@ -42,7 +42,10 @@ export default function BonusHuntBoard() {
     } catch {}
     setReady(true);
     fetch('/api/slots').then((response) => response.ok ? response.json() : Promise.reject())
-      .then((payload: { slots?: SlotRelease[] }) => { if (payload.slots?.length) setCatalog(payload.slots); })
+      .then((payload) => {
+        const slots = (payload as { slots?: SlotRelease[] }).slots;
+        if (slots?.length) setCatalog(slots);
+      })
       .catch(() => {}).finally(() => setCatalogLoading(false));
   }, []);
 
