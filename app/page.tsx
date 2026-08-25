@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import BonusHuntBoard from './components/BonusHuntBoard';
 
 const affiliateUrl =
   process.env.NEXT_PUBLIC_CELSIUS_AFFILIATE_URL ?? 'https://celsius.games/UOpYoHXSoi';
@@ -21,6 +22,7 @@ export default function Home() {
         </a>
         <nav aria-label="Navigation principale">
           <a href="#offre">Le partenaire</a>
+          <a href="#bonus-hunt">Bonus Hunt</a>
           <a href="#live">Les lives</a>
           <a href="#communaute">Communauté</a>
         </nav>
@@ -49,7 +51,6 @@ export default function Home() {
 
         <div className="hero-visual" aria-label="Spin District, partenaire Celsius Casino">
           <div className="visual-glow" />
-          <div className="live-chip"><span /> Nouveau partenaire</div>
           <div className="partner-card">
             <div className="partner-topline">
               <span>CASINO PARTENAIRE</span><span className="status-dot">EN LIGNE</span>
@@ -95,9 +96,29 @@ export default function Home() {
         <p className="offer-terms">*Offre réservée aux personnes majeures, soumise à éligibilité et aux conditions, limites et exigences de mise affichées par Celsius Casino. Les bonus ne garantissent aucun gain.</p>
       </section>
 
+      <section className="hunt-section section-shell" id="bonus-hunt">
+        <div className="section-heading hunt-heading">
+          <div>
+            <span className="section-index">02 — BONUS HUNT LAB</span>
+            <h2>CONSTRUIS<br /><em>LA PROCHAINE CHASSE</em></h2>
+          </div>
+          <p>
+            Explore les dernières sorties, filtre les studios et compose une
+            sélection pour le prochain live. Le catalogue se met à jour via une
+            API spécialisée et conserve une sélection Celsius si le flux est indisponible.
+          </p>
+        </div>
+        <BonusHuntBoard />
+        <div className="hunt-howto">
+          <article><span>01</span><h3>REPÈRE</h3><p>Filtre les nouveautés par studio et compare les données disponibles.</p></article>
+          <article><span>02</span><h3>COMPOSE</h3><p>Ajoute tes machines favorites à la sélection du prochain Bonus Hunt.</p></article>
+          <article><span>03</span><h3>SUIS LE LIVE</h3><p>Retrouve la chasse complète et son ouverture sur la chaîne Rumble.</p></article>
+        </div>
+      </section>
+
       <section className="live-section section-shell" id="live">
         <div className="section-heading compact">
-          <div><span className="section-index">02 — LE LIVE</span><h2>DERNIERS<br /><em>FORMATS</em></h2></div>
+          <div><span className="section-index">03 — LE LIVE</span><h2>DERNIERS<br /><em>FORMATS</em></h2></div>
           <a className="text-link" href={streamUrl} target="_blank" rel="noreferrer">Voir la chaîne Rumble <ArrowIcon /></a>
         </div>
         <div className="content-grid">
@@ -118,7 +139,7 @@ export default function Home() {
         <div className="community-inner section-shell">
           <div className="community-avatar"><Image src="/avatar.png" alt="Logo Spin District" width={150} height={150} /></div>
           <div className="community-copy">
-            <span className="section-index">03 — COMMUNAUTÉ</span><h2>LE LIVE S’ARRÊTE.<br /><em>PAS LE DISTRICT.</em></h2>
+            <span className="section-index">04 — COMMUNAUTÉ</span><h2>LE LIVE S’ARRÊTE.<br /><em>PAS LE DISTRICT.</em></h2>
             <p>Rejoins Discord pour connaître les prochains lives, discuter des sessions et ne manquer aucun challenge.</p>
           </div>
           <a className="button button-primary discord-button" href={discordUrl} target="_blank" rel="noreferrer">Rejoindre Discord <ArrowIcon /></a>
