@@ -224,7 +224,7 @@ export default function BonusHuntBoard() {
   const [showImport, setShowImport] = useState(false);
   const [importData, setImportData] = useState('');
   const [copyFeedback, setCopyFeedback] = useState('');
-  const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'error'>('saved');
+  const [saveStatus, setSaveStatus] = useState<'saved' | 'error'>('saved');
 
   // Form states for hunt creation / edition
   const [huntTitle, setHuntTitle] = useState('Bonus Hunt Spin District');
@@ -248,9 +248,14 @@ export default function BonusHuntBoard() {
   // Responsive state
   const [mobileShowList, setMobileShowList] = useState(false);
   const [librarySearch, setLibrarySearch] = useState('');
+
+  // Mode overlay plein écran pour le stream / OBS
+  const [streamMode, setStreamMode] = useState(false);
   const loaded = useRef(false);
 
-  // Load from local storage on mount
+  // Chargement depuis le stockage local : ne peut se faire qu'après le montage,
+  // le localStorage n'existant pas côté serveur.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const stored = readStoredState();
     if (stored.hunts.length > 0) {
@@ -275,18 +280,21 @@ export default function BonusHuntBoard() {
       .catch(() => {})
       .finally(() => setCatalogLoading(false));
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
-  // Save to local storage on any state change
+  // Sauvegarde locale à chaque changement d'état. L'écriture est synchrone ;
+  // seul l'indicateur d'état est mis à jour de façon différée (et débouncée)
+  // pour éviter une cascade de rendus à chaque frappe.
   useEffect(() => {
     if (!loaded.current || !ready) return;
+    let ok = true;
     try {
-      setSaveStatus('saving');
       persistState({ hunts, activeId });
-      const timer = setTimeout(() => setSaveStatus('saved'), 350);
-      return () => clearTimeout(timer);
     } catch {
-      setSaveStatus('error');
+      ok = false;
     }
+    const timer = setTimeout(() => setSaveStatus(ok ? 'saved' : 'error'), 200);
+    return () => clearTimeout(timer);
   }, [activeId, hunts, ready]);
 
   // Keyboard shortcut for modals
@@ -297,14 +305,25 @@ export default function BonusHuntBoard() {
         setShowCreate(false);
         setShowEditHunt(false);
         setShowImport(false);
+        setStreamMode(false);
       }
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  // Mode stream : bloque le scroll de la page derrière l'overlay.
+  useEffect(() => {
+    if (!streamMode) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [streamMode]);
+
   const activeHunt = hunts.find((hunt) => hunt.id === activeId) ?? hunts[0] ?? null;
-  const entries = activeHunt?.entries ?? [];
+  const entries = useMemo(() => activeHunt?.entries ?? [], [activeHunt]);
 
   // Metrics calculations
   const totalGain = entries.reduce((sum, entry) => sum + (entry.gain ?? 0), 0);
@@ -576,15 +595,68 @@ export default function BonusHuntBoard() {
     });
   }
 
+  function downloadFile(filename: string, content: string, mime: string) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+  }
+
   function exportHuntsJSON() {
-    const dataStr =
-      'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify({ hunts, activeId }, null, 2));
-    const downloadAnchor = document.createElement('a');
-    downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `spin-district-hunts-${new Date().toISOString().slice(0, 10)}.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
+    downloadFile(
+      `spin-district-hunts-${new Date().toISOString().slice(0, 10)}.json`,
+      JSON.stringify({ hunts, activeId, exportedAt: new Date().toISOString() }, null, 2),
+      'application/json;charset=utf-8'
+    );
+  }
+
+  /**
+   * Export CSV de la session active. Séparateur « ; » + BOM UTF-8 pour que
+   * Excel / Google Sheets en français ouvrent le fichier sans réglage.
+   */
+  function exportActiveHuntCSV() {
+    if (!activeHunt) return;
+    const cell = (value: string | number) => `"${String(value).replace(/"/g, '""')}"`;
+    const decimal = (value: number) => value.toFixed(2).replace('.', ',');
+
+    const lines = [
+      ['#', 'Machine', 'Provider', 'Mise (EUR)', 'Statut', 'Gain (EUR)', 'Multiplicateur'].map(cell).join(';'),
+      ...activeHunt.entries.map((entry, index) =>
+        [
+          index + 1,
+          entry.name,
+          entry.provider,
+          decimal(entry.bet),
+          entry.collected ? 'Collecté' : 'En attente',
+          entry.gain !== null ? decimal(entry.gain) : '',
+          entry.gain !== null && entry.bet > 0 ? `${decimal(entry.gain / entry.bet)}x` : '',
+        ]
+          .map(cell)
+          .join(';')
+      ),
+      '',
+      [cell('Session'), cell(activeHunt.title)].join(';'),
+      [cell('Bankroll de départ'), cell(decimal(activeHunt.startAmount))].join(';'),
+      [cell('Total misé'), cell(decimal(totalBet))].join(';'),
+      [cell('Total gagné'), cell(decimal(totalGain))].join(';'),
+      [cell('Profit net'), cell(decimal(profit))].join(';'),
+      [cell('ROI (%)'), cell(decimal(roi))].join(';'),
+      [cell('Break-even fixe'), cell(`${decimal(breakEven)}x`)].join(';'),
+      [cell('Multiplicateur moyen'), cell(`${decimal(averageMulti)}x`)].join(';'),
+      [cell('Bonus ouverts'), cell(`${collected.length}/${activeHunt.entries.length}`)].join(';'),
+    ];
+
+    const slug = activeHunt.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'hunt';
+    downloadFile(
+      `spin-district-${slug}-${new Date().toISOString().slice(0, 10)}.csv`,
+      `\uFEFF${lines.join('\r\n')}`,
+      'text/csv;charset=utf-8'
+    );
   }
 
   function handleImportJSON(event: React.FormEvent<HTMLFormElement>) {
@@ -717,8 +789,15 @@ export default function BonusHuntBoard() {
 
       <div className="hunt-library-footer">
         <div className="backup-row">
-          <button type="button" onClick={exportHuntsJSON} title="Sauvegarder vos sessions en JSON">
+          <button type="button" onClick={exportHuntsJSON} title="Sauvegarder toutes vos sessions en JSON">
             💾 Exporter JSON
+          </button>
+          <button
+            type="button"
+            onClick={exportActiveHuntCSV}
+            title="Exporter la session active en CSV (Excel, Google Sheets)"
+          >
+            ⤓ Exporter CSV
           </button>
           <button type="button" onClick={() => setShowImport(true)} title="Restaurer un fichier JSON">
             📥 Importer
@@ -786,9 +865,7 @@ export default function BonusHuntBoard() {
             <div className="hunt-title-row">
               <span className="hunt-live-badge">
                 <i className="status-dot" />
-                {saveStatus === 'saved' && 'Sauvegardé en local'}
-                {saveStatus === 'saving' && 'Enregistrement…'}
-                {saveStatus === 'error' && 'Erreur stockage local'}
+                {saveStatus === 'saved' ? 'Sauvegardé en local' : 'Erreur stockage local'}
               </span>
               <div className="title-edit-combo">
                 <h3 className="hunt-current-title">{activeHunt.title}</h3>
@@ -805,6 +882,22 @@ export default function BonusHuntBoard() {
           </div>
 
           <div className="hunt-appbar-actions">
+            <button
+              type="button"
+              className="hunt-button-secondary"
+              onClick={() => setStreamMode(true)}
+              title="Affichage plein écran pour le stream (capture OBS)"
+            >
+              📺 Mode stream
+            </button>
+            <button
+              type="button"
+              className="hunt-button-secondary"
+              onClick={exportActiveHuntCSV}
+              title="Exporter cette session en CSV (Excel, Sheets)"
+            >
+              ⤓ CSV
+            </button>
             <button
               type="button"
               className={`hunt-btn-discord ${copyFeedback ? 'copied' : ''}`}
@@ -1185,6 +1278,84 @@ export default function BonusHuntBoard() {
         </div>
       </div>
 
+      {/* MODE STREAM / OVERLAY OBS */}
+      {streamMode && (
+        <div className="hunt-overlay" role="dialog" aria-modal="true" aria-label="Mode stream">
+          <div className="overlay-head">
+            <div className="overlay-title">
+              <span className="overlay-tag">BONUS HUNT · SPIN DISTRICT</span>
+              <h3>{activeHunt.title}</h3>
+            </div>
+            <div className="overlay-head-right">
+              <span className="overlay-count">
+                {collected.length}/{entries.length} ouverts
+              </span>
+              <button type="button" className="overlay-close" onClick={() => setStreamMode(false)}>
+                ✕ Quitter (Échap)
+              </button>
+            </div>
+          </div>
+
+          <div className="overlay-metrics">
+            <div>
+              <span>Start</span>
+              <strong>{money.format(activeHunt.startAmount)}</strong>
+            </div>
+            <div>
+              <span>Break-even restant</span>
+              <strong className="accent">{evolvingBreakEven.toFixed(1)}x</strong>
+            </div>
+            <div>
+              <span>Multi moyen</span>
+              <strong className="accent">{averageMulti.toFixed(1)}x</strong>
+            </div>
+            <div>
+              <span>Total gagné</span>
+              <strong>{money.format(totalGain)}</strong>
+            </div>
+            <div className={profit >= 0 ? 'positive' : 'negative'}>
+              <span>Profit net</span>
+              <strong>
+                {profit >= 0 ? '+' : ''}
+                {money.format(profit)}
+              </strong>
+            </div>
+          </div>
+
+          <div className="overlay-progress" aria-hidden="true">
+            <span style={{ width: `${completionPercent}%` }} />
+          </div>
+
+          {entries.length > 0 ? (
+            <ol className="overlay-list">
+              {entries.map((entry, index) => {
+                const multi = entry.gain !== null && entry.bet > 0 ? entry.gain / entry.bet : null;
+                return (
+                  <li key={entry.id} className={entry.collected ? 'done' : 'waiting'}>
+                    <span className="ov-idx">{String(index + 1).padStart(2, '0')}</span>
+                    <span className="ov-name">{entry.name}</span>
+                    <span className="ov-bet">{money.format(entry.bet)}</span>
+                    <span className="ov-gain">
+                      {entry.gain !== null ? money.format(entry.gain) : '—'}
+                    </span>
+                    <span className="ov-multi">{multi !== null ? `${multi.toFixed(1)}x` : '—'}</span>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : (
+            <p className="overlay-empty">
+              Aucune machine dans cette session. Ajoutez vos slots pour lancer la chasse.
+            </p>
+          )}
+
+          <p className="overlay-footer">
+            spin-district • Break-even fixe {breakEven.toFixed(1)}x • Total misé{' '}
+            {money.format(totalBet)} • 18+
+          </p>
+        </div>
+      )}
+
       {/* CREATE HUNT MODAL */}
       {showCreate && (
         <CreateModal
@@ -1287,7 +1458,7 @@ export default function BonusHuntBoard() {
                 className={catalogTab === 'catalog' ? 'active' : ''}
                 onClick={() => setCatalogTab('catalog')}
               >
-                Catalogue ({catalog.length.toLocaleString('fr-FR')} slots)
+                Catalogue ({catalogLoading ? '…' : catalog.length.toLocaleString('fr-FR')} slots)
               </button>
               <button
                 type="button"
@@ -1336,6 +1507,13 @@ export default function BonusHuntBoard() {
                     ))}
                   </select>
                 </div>
+
+                {catalogLoading && (
+                  <p className="catalog-loading-hint">
+                    <span className="dot-pulse" /> Chargement du catalogue complet (2 000+
+                    machines)… la sélection de secours reste utilisable.
+                  </p>
+                )}
 
                 <div className="catalog-results">
                   {filteredCatalog.slice(0, visibleLimit).map((slot) => (

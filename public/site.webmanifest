@@ -1,9 +1,14 @@
 {
   "name": "Spin District — Lives, Bonus Hunts & Tracker",
   "short_name": "Spin District",
-  "description": "Lives casino, tracker de bonus hunts sauvegardé dans votre navigateur, challenges et communauté Discord.",
+  "description": "Lives casino, tracker de bonus hunts sauvegardé dans votre navigateur, casinos partenaires, challenges et communauté Discord.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "any",
+  "lang": "fr-FR",
+  "dir": "ltr",
+  "categories": ["entertainment", "games", "utilities"],
   "background_color": "#050806",
   "theme_color": "#050806",
   "icons": [
@@ -13,9 +18,42 @@
       "type": "image/svg+xml"
     },
     {
-      "src": "/avatar.png",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Bonus Hunt Lab",
+      "short_name": "Hunt Lab",
+      "description": "Ouvrir le tracker de bonus hunts",
+      "url": "/#bonus-hunt"
+    },
+    {
+      "name": "Casinos partenaires",
+      "short_name": "Casinos",
+      "description": "Comparatif Stake et Celsius Casino",
+      "url": "/casinos"
+    },
+    {
+      "name": "Guide du Bonus Hunt",
+      "short_name": "Guide",
+      "description": "Règles, break-even et bankroll",
+      "url": "/guide-bonus-hunt"
     }
   ]
 }

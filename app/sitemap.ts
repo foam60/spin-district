@@ -1,48 +1,17 @@
 import type { MetadataRoute } from 'next';
+import { siteUrl } from './lib/site';
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  'https://spin-district.sandra-mousse-sm.chatgpt.site';
-
+/**
+ * Google ignore les URL à fragment (#section) dans un sitemap : on ne déclare
+ * donc que des URL réellement indexables.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const currentDate = new Date();
+  const lastModified = new Date();
 
   return [
-    {
-      url: siteUrl,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 1.0,
-    },
-    {
-      url: `${siteUrl}#bonus-hunt`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${siteUrl}#offre`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl}#live`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl}#communaute`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl}#faq`,
-      lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
+    { url: `${siteUrl}/`, lastModified, changeFrequency: 'daily', priority: 1 },
+    { url: `${siteUrl}/casinos`, lastModified, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${siteUrl}/guide-bonus-hunt`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${siteUrl}/jeu-responsable`, lastModified, changeFrequency: 'yearly', priority: 0.5 },
   ];
 }
