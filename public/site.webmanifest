@@ -1,0 +1,21 @@
+{
+  "name": "Spin District — Lives, Bonus Hunts & Tracker",
+  "short_name": "Spin District",
+  "description": "Lives casino, tracker de bonus hunts sauvegardé dans votre navigateur, challenges et communauté Discord.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050806",
+  "theme_color": "#050806",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/avatar.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
