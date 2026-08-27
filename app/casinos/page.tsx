@@ -123,6 +123,9 @@ export default function CasinosPage() {
         </div>
 
         <div className="compare-cta-row">
+          <Link className="button button-primary" href="/remboursement-celsius">
+            Demander le remboursement de mon dépôt <ArrowIcon />
+          </Link>
           <a
             className="button button-ghost"
             href={links.celsius}

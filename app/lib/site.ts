@@ -1,5 +1,5 @@
 export const siteUrl = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://spin-district.sandra-mousse-sm.chatgpt.site'
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.spin-district.fun'
 ).replace(/\/$/, '');
 
 export const links = {

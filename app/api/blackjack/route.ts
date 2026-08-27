@@ -13,6 +13,9 @@ export const dynamic = 'force-dynamic';
 
 type Body = { action?: unknown; bet?: unknown };
 
+const MAPPING_HINT =
+  'Les colonnes de chat_users / account_links n’ont pas été reconnues. Ouvrez /admin : le panneau de diagnostic indique quel nom ajouter dans supabase/00-mapping.sql.';
+
 /** Messages renvoyés par les fonctions Postgres, traduits pour l'interface. */
 const PG_ERRORS: Record<string, string> = {
   not_authenticated: 'Session expirée. Reconnectez-vous.',
@@ -24,10 +27,13 @@ const PG_ERRORS: Record<string, string> = {
   insufficient_points: 'Solde insuffisant pour cette mise.',
   round_not_open: 'Cette manche n’est plus ouverte.',
   round_already_settled: 'Cette manche est déjà soldée.',
+  // Correspondance de schéma non résolue par supabase/00-mapping.sql.
+  account_links_mapping_unknown: MAPPING_HINT,
+  chat_users_mapping_unknown: MAPPING_HINT,
 };
 
 const SETUP_HINT =
-  'Le blackjack n’est pas encore installé côté base de données (voir supabase/blackjack.sql).';
+  'Le blackjack n’est pas encore installé côté base de données. Exécutez supabase/00-mapping.sql, puis blackjack.sql, puis tickets.sql.';
 
 function fail(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
@@ -41,14 +47,39 @@ function mapDbError(error: { message: string; code?: string }): { message: strin
       return { message, status };
     }
   }
-  // PostgREST : fonction absente du schéma.
-  if (error.code === 'PGRST202' || /Could not find the function/i.test(error.message)) {
+  // Fonction absente : soit PostgREST ne la trouve pas (PGRST202), soit une
+  // fonction appelée en interne manque (42883, ex. sd_adjust_points quand
+  // 00-mapping.sql n'a pas été exécuté).
+  if (
+    error.code === 'PGRST202' ||
+    error.code === '42883' ||
+    error.code === '42P01' ||
+    /Could not find the function|does not exist/i.test(error.message)
+  ) {
     return { message: SETUP_HINT, status: 503 };
   }
-  return { message: 'Erreur inattendue côté serveur.', status: 500 };
+  return {
+    message: `Erreur côté base de données : ${error.message.slice(0, 200)}`,
+    status: 500,
+  };
 }
 
 export async function POST(request: Request) {
+  try {
+    return await handle(request);
+  } catch (error) {
+    // Sans ce filet, une exception non prévue remonte en 500 HTML illisible
+    // côté client (et dans les logs Vercel).
+    return NextResponse.json(
+      {
+        error: `Erreur serveur : ${error instanceof Error ? error.message.slice(0, 200) : 'inconnue'}`,
+      },
+      { status: 500 }
+    );
+  }
+}
+
+async function handle(request: Request) {
   const supabase = await createClient();
 
   const {

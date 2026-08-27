@@ -45,7 +45,11 @@ set search_path = public
 as $$
   select public.sd_detect_column(
     'account_links',
-    array['user_id', 'auth_user_id', 'supabase_user_id', 'auth_uid', 'uid', 'profile_id', 'account_id', 'id']
+    array[
+      'user_id', 'auth_user_id', 'supabase_user_id', 'supabase_uid', 'auth_uid', 'auth_id',
+      'uid', 'discord_user_id', 'sb_user_id', 'owner_id', 'member_id', 'profile_id',
+      'account_id', 'id'
+    ]
   );
 $$;
 
@@ -59,7 +63,10 @@ set search_path = public
 as $$
   select public.sd_detect_column(
     'account_links',
-    array['rumble_username', 'username', 'rumble_user', 'rumble_name', 'chat_username']
+    array[
+      'rumble_username', 'username', 'rumble_user', 'rumble_name', 'chat_username',
+      'rumble_pseudo', 'pseudo', 'login'
+    ]
   );
 $$;
 
@@ -257,6 +264,125 @@ $$;
 -- puis ajoutez le nom manquant au tableau de candidats de la fonction concernée.
 
 -- ---------------------------------------------------------------------
+-- 6. Variantes tolérantes (pour les écrans d'administration)
+-- ---------------------------------------------------------------------
+-- Une correspondance de colonne introuvable ne doit pas vider une liste
+-- entière : ces variantes renvoient NULL au lieu de lever une exception.
+create or replace function public.sd_rumble_username_safe(p_user uuid)
+returns text
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+begin
+  return public.sd_rumble_username(p_user);
+exception when others then
+  return null;
+end;
+$$;
+
+create or replace function public.sd_points_balance_safe(p_user uuid)
+returns integer
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+begin
+  return public.sd_points_balance(p_user);
+exception when others then
+  return null;
+end;
+$$;
+
+-- ---------------------------------------------------------------------
+-- 7. Auto-test — répond à « pourquoi ma liste est vide ? »
+-- ---------------------------------------------------------------------
+create or replace function public.sd_count_safe(p_schema text, p_table text)
+returns text
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+declare
+  v_count integer;
+begin
+  execute format('select count(*)::integer from %I.%I', p_schema, p_table) into v_count;
+  return v_count::text;
+exception when others then
+  return 'inaccessible (' || SQLERRM || ')';
+end;
+$$;
+
+create or replace function public.sd_selftest()
+returns table (element text, value text)
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+declare
+  v_admin text;
+  v_name  text;
+begin
+  begin
+    v_admin := public.is_admin()::text;
+  exception when others then
+    v_admin := 'erreur : ' || SQLERRM;
+  end;
+
+  v_name := public.sd_rumble_username_safe(auth.uid());
+
+  return query
+  select 'is_admin()'::text, coalesce(v_admin, 'null')::text
+  union all
+  select 'e-mail du JWT'::text, coalesce(auth.jwt() ->> 'email', '(aucun)')::text
+  union all
+  select 'account_links -> colonne utilisateur'::text,
+         coalesce(public.sd_link_user_column(), 'INTROUVABLE')::text
+  union all
+  select 'account_links -> colonne pseudo'::text,
+         coalesce(public.sd_link_name_column(), 'INTROUVABLE')::text
+  union all
+  select 'chat_users -> colonne pseudo'::text,
+         coalesce(public.sd_chat_name_column(), 'INTROUVABLE')::text
+  union all
+  select 'chat_users -> colonne points'::text,
+         coalesce(public.sd_chat_points_column(), 'INTROUVABLE')::text
+  union all
+  select 'lignes auth.users'::text, public.sd_count_safe('auth', 'users')
+  union all
+  select 'lignes account_links'::text, public.sd_count_safe('public', 'account_links')
+  union all
+  select 'lignes chat_users'::text, public.sd_count_safe('public', 'chat_users')
+  union all
+  select 'lignes tickets'::text, public.sd_count_safe('public', 'tickets')
+  union all
+  select 'mon pseudo Rumble résolu'::text, coalesce(v_name, 'non résolu')::text
+  union all
+  select 'mon solde de points'::text,
+         coalesce(public.sd_points_balance_safe(auth.uid())::text, 'non résolu')::text;
+end;
+$$;
+
+-- Colonnes réellement présentes, pour compléter les listes de candidats.
+create or replace function public.sd_columns_report()
+returns table (table_name text, columns text)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select c.table_name::text, string_agg(c.column_name::text, ', ' order by c.ordinal_position)
+  from information_schema.columns c
+  where c.table_schema = 'public'
+    and c.table_name::text in ('account_links', 'chat_users')
+  group by c.table_name::text;
+$$;
+
+-- ---------------------------------------------------------------------
 -- 6. Droits
 -- ---------------------------------------------------------------------
 revoke all on function public.sd_detect_column(text, text[]) from public;
@@ -269,8 +395,18 @@ revoke all on function public.sd_points_balance(uuid) from public;
 revoke all on function public.sd_adjust_points(uuid, integer) from public;
 revoke all on function public.sd_mapping_report() from public;
 
+revoke all on function public.sd_rumble_username_safe(uuid) from public;
+revoke all on function public.sd_points_balance_safe(uuid) from public;
+revoke all on function public.sd_count_safe(text, text) from public;
+revoke all on function public.sd_selftest() from public;
+revoke all on function public.sd_columns_report() from public;
+
 grant execute on function public.sd_rumble_username(uuid) to authenticated;
 grant execute on function public.sd_points_balance(uuid) to authenticated;
 grant execute on function public.sd_mapping_report() to authenticated;
+grant execute on function public.sd_rumble_username_safe(uuid) to authenticated;
+grant execute on function public.sd_points_balance_safe(uuid) to authenticated;
+grant execute on function public.sd_selftest() to authenticated;
+grant execute on function public.sd_columns_report() to authenticated;
 -- sd_adjust_points n'est jamais appelée depuis l'application : uniquement
 -- depuis les fonctions security definer du blackjack et des tickets.

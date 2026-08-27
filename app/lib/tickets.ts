@@ -79,7 +79,10 @@ export const PROOF_MAX_BYTES = 5 * 1024 * 1024;
 export const PROOF_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'application/pdf'];
 
 export const SETUP_HINT =
-  'Le système de tickets n’est pas encore installé côté base de données (voir supabase/tickets.sql).';
+  'Le système de tickets n’est pas encore installé côté base de données. Exécutez supabase/00-mapping.sql, puis blackjack.sql, puis tickets.sql.';
+
+export const MAPPING_HINT =
+  'Les colonnes de chat_users / account_links n’ont pas été reconnues. Le panneau de diagnostic de /admin indique quel nom ajouter dans supabase/00-mapping.sql.';
 
 /** Messages des exceptions Postgres, traduits pour l'interface. */
 const PG_ERRORS: Record<string, { message: string; status: number }> = {
@@ -100,6 +103,8 @@ const PG_ERRORS: Record<string, { message: string; status: number }> = {
   },
   ticket_not_found: { message: 'Demande introuvable.', status: 404 },
   ticket_already_resolved: { message: 'Cette demande a déjà été traitée.', status: 409 },
+  account_links_mapping_unknown: { message: MAPPING_HINT, status: 503 },
+  chat_users_mapping_unknown: { message: MAPPING_HINT, status: 503 },
 };
 
 export function mapTicketError(error: { message: string; code?: string }): {
@@ -112,12 +117,16 @@ export function mapTicketError(error: { message: string; code?: string }): {
   // Fonction ou table absente du schéma.
   if (
     error.code === 'PGRST202' ||
+    error.code === '42883' ||
     error.code === '42P01' ||
-    /Could not find the function/i.test(error.message)
+    /Could not find the function|does not exist/i.test(error.message)
   ) {
     return { message: SETUP_HINT, status: 503 };
   }
-  return { message: 'Erreur inattendue côté serveur.', status: 500 };
+  return {
+    message: `Erreur côté base de données : ${error.message.slice(0, 200)}`,
+    status: 500,
+  };
 }
 
 const dateTime = new Intl.DateTimeFormat('fr-FR', {

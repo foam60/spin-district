@@ -4,12 +4,7 @@ import { notFound } from 'next/navigation';
 import AdminDashboard from '../components/AdminDashboard';
 import PageShell from '../components/PageShell';
 import { ArrowIcon } from '../components/BrandIcons';
-import {
-  ADMIN_FALLBACK_EMAIL,
-  SETUP_HINT,
-  type Member,
-  type Ticket,
-} from '../lib/tickets';
+import { ADMIN_FALLBACK_EMAIL, SETUP_HINT, type Member, type Ticket } from '../lib/tickets';
 import { createClient } from '@/utils/supabase/server';
 
 export const metadata: Metadata = {
@@ -18,6 +13,8 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = 'force-dynamic';
+
+type SelfTestRow = { element: string; value: string };
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -78,14 +75,37 @@ export default async function AdminPage() {
     );
   }
 
-  const [{ data: tickets }, { data: members }, { data: counts }] = await Promise.all([
+  // Les erreurs sont conservées : une liste vide sans explication est
+  // indébogable — c'est exactement ce qui affichait « Membres 0 ».
+  const [ticketsRes, membersRes, countsRes, selfTestRes, columnsRes] = await Promise.all([
     supabase.rpc('admin_list_tickets', { p_status: null }),
     supabase.rpc('admin_list_members'),
     supabase.rpc('admin_ticket_counts'),
+    supabase.rpc('sd_selftest'),
+    supabase.rpc('sd_columns_report'),
   ]);
 
+  const failures = [
+    ['admin_list_tickets', ticketsRes.error?.message],
+    ['admin_list_members', membersRes.error?.message],
+    ['admin_ticket_counts', countsRes.error?.message],
+    ['sd_selftest', selfTestRes.error?.message],
+  ].filter((entry): entry is [string, string] => Boolean(entry[1]));
+
+  const tickets = (ticketsRes.data ?? []) as Ticket[];
+  const members = (membersRes.data ?? []) as Member[];
+  const selfTest = (selfTestRes.data ?? []) as SelfTestRow[];
+  const columns = (columnsRes.data ?? []) as { table_name: string; columns: string }[];
+
   const countMap = Object.fromEntries(
-    ((counts ?? []) as { kind: string; pending: number }[]).map((row) => [row.kind, row.pending])
+    ((countsRes.data ?? []) as { kind: string; pending: number }[]).map((row) => [
+      row.kind,
+      row.pending,
+    ])
+  );
+
+  const mappingBroken = selfTest.some(
+    (row) => row.value === 'INTROUVABLE' || row.value.startsWith('inaccessible')
   );
 
   return (
@@ -112,11 +132,76 @@ export default async function AdminPage() {
       }
       crumbs={[{ name: 'Administration', path: '/admin' }]}
     >
-      <AdminDashboard
-        tickets={(tickets ?? []) as Ticket[]}
-        members={(members ?? []) as Member[]}
-        counts={countMap}
-      />
+      {failures.length > 0 && (
+        <section className="admin-diag is-error" aria-labelledby="diag-error-title">
+          <h2 id="diag-error-title">Erreurs Postgres</h2>
+          <ul>
+            {failures.map(([fn, message]) => (
+              <li key={fn}>
+                <code>{fn}</code> : {message}
+              </li>
+            ))}
+          </ul>
+          <p>
+            Relancez <code>supabase/00-mapping.sql</code> puis <code>supabase/tickets.sql</code> :
+            la version actuelle des scripts tolère une correspondance de colonne manquante au lieu
+            de vider les listes.
+          </p>
+        </section>
+      )}
+
+      {(mappingBroken || failures.length > 0) && (
+        <section className="admin-diag" aria-labelledby="diag-title">
+          <h2 id="diag-title">Diagnostic de la base</h2>
+          <div className="compare-table-wrap">
+            <table className="compare-table admin-table">
+              <caption className="sr-only">Auto-test de la correspondance de schéma</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Élément</th>
+                  <th scope="col">Valeur</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selfTest.map((row) => (
+                  <tr key={row.element}>
+                    <th scope="row">{row.element}</th>
+                    <td
+                      className={
+                        row.value === 'INTROUVABLE' || row.value.startsWith('inaccessible')
+                          ? 'admin-diag-bad'
+                          : undefined
+                      }
+                    >
+                      {row.value}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {columns.length > 0 && (
+            <>
+              <h3 className="shop-subheading">Colonnes réellement présentes</h3>
+              <ul className="admin-diag-columns">
+                {columns.map((row) => (
+                  <li key={row.table_name}>
+                    <code>{row.table_name}</code> : {row.columns}
+                  </li>
+                ))}
+              </ul>
+              <p>
+                Si une ligne ci-dessus indique <strong>INTROUVABLE</strong>, ajoutez le nom réel au
+                tableau de candidats de la fonction correspondante dans{' '}
+                <code>supabase/00-mapping.sql</code>, puis relancez le script.
+              </p>
+            </>
+          )}
+        </section>
+      )}
+
+      <AdminDashboard tickets={tickets} members={members} counts={countMap} />
     </PageShell>
   );
 }

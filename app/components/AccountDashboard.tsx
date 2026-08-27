@@ -205,6 +205,9 @@ export default function AccountDashboard({
             <Link className="button button-ghost" href="/bonus-hunt">
               Ouvrir le Hunt Lab <ArrowIcon />
             </Link>
+            <Link className="button button-ghost" href="/remboursement-celsius">
+              Remboursement Celsius <ArrowIcon />
+            </Link>
             <Link className="button button-ghost" href="/jeu-responsable">
               Jeu responsable &amp; 18+ <ArrowIcon />
             </Link>

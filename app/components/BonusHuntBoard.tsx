@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { fallbackSlots, type SlotRelease } from '../data/slots';
+import { siteUrl } from '../lib/site';
 
 export type HuntEntry = {
   id: string;
@@ -586,7 +587,7 @@ export default function BonusHuntBoard() {
       `⚡ **Multiplicateur Moyen :** ${averageMulti.toFixed(1)}x`,
       `🔥 **Meilleur Multi :** ${multiMaxStr}`,
       `━━━━━━━━━━━━━━━━━━━━━━`,
-      `🌐 *Suivi sur Spin District : https://spin-district.sandra-mousse-sm.chatgpt.site*`,
+      `🌐 *Suivi sur Spin District : ${siteUrl}*`,
     ].join('\n');
 
     navigator.clipboard.writeText(text).then(() => {

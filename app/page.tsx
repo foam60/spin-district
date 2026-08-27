@@ -158,8 +158,8 @@ export default function Home() {
             </div>
             <div className="trust-separator" />
             <div className="trust-item">
-              <strong>550%</strong>
-              <span>Bonus Bienvenue*</span>
+              <strong>20 €</strong>
+              <span>1er dépôt remboursé*</span>
             </div>
             <div className="trust-separator" />
             <div className="trust-item">
@@ -362,6 +362,9 @@ export default function Home() {
         </div>
 
         <div className="section-cta-row">
+          <Link className="button button-primary" href="/remboursement-celsius">
+            Faire rembourser mon dépôt Celsius <ArrowIcon />
+          </Link>
           <Link className="button button-ghost" href="/casinos">
             Voir le comparatif détaillé Celsius vs Stake <ArrowIcon />
           </Link>

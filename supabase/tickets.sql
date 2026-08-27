@@ -264,8 +264,8 @@ as $$
       u.raw_user_meta_data ->> 'full_name',
       u.raw_user_meta_data ->> 'name'
     ) as discord_name,
-    public.sd_rumble_username(t.user_id),
-    public.sd_points_balance(t.user_id)
+    public.sd_rumble_username_safe(t.user_id),
+    public.sd_points_balance_safe(t.user_id)
   from public.tickets t
   join auth.users u on u.id = t.user_id
   where public.is_admin()
@@ -311,8 +311,8 @@ as $$
       u.raw_user_meta_data ->> 'full_name',
       u.raw_user_meta_data ->> 'name'
     ) as discord_name,
-    public.sd_rumble_username(u.id),
-    public.sd_points_balance(u.id),
+    public.sd_rumble_username_safe(u.id),
+    public.sd_points_balance_safe(u.id),
     null::timestamptz as linked_at,
     u.created_at
   from auth.users u
