@@ -81,10 +81,11 @@ export default async function ComptePage({
         <>
           <p>
             Liez votre pseudo Rumble à votre compte Discord pour cumuler des points pendant les
-            lives et les dépenser dans la boutique virtuelle.
+            lives et les échanger contre des cartes cadeaux USDT dans la boutique.
           </p>
           <p className="page-hero-note">
-            Points 100 % virtuels • Ni achetables ni convertibles en argent • 18+
+            Points gagnés en participant • Jamais achetables avec de l’argent • Échangeables en
+            cartes cadeaux USDT • 18+
           </p>
         </>
       }
@@ -115,7 +116,8 @@ export default async function ComptePage({
 
               <ul className="account-hint-list is-checks">
                 <li>Aucun mot de passe, aucune carte bancaire</li>
-                <li>Points purement virtuels, non convertibles en argent</li>
+                <li>Points gagnés en participant, jamais achetés</li>
+                <li>Échangeables contre des cartes cadeaux USDT</li>
                 <li>Déconnexion possible à tout moment</li>
               </ul>
 

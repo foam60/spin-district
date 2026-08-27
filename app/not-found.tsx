@@ -31,7 +31,7 @@ export default function NotFound() {
         </p>
 
         <div className="notfound-links">
-          <Link className="button button-primary" href="/#bonus-hunt">
+          <Link className="button button-primary" href="/bonus-hunt">
             Ouvrir le Hunt Lab <ArrowIcon />
           </Link>
           <Link className="button button-ghost" href="/casinos">

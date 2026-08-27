@@ -176,7 +176,7 @@ export default function ResponsibleGamingPage() {
         </p>
         <p>
           <strong>Vos données :</strong> le{' '}
-          <Link href="/#bonus-hunt">Bonus Hunt Lab</Link> fonctionne sans inscription. Vos sessions
+          <Link href="/bonus-hunt">Bonus Hunt Lab</Link> fonctionne sans inscription. Vos sessions
           sont stockées uniquement dans le stockage local de votre navigateur, sur votre appareil, et
           ne sont jamais transmises à Spin District ni à un tiers.
         </p>

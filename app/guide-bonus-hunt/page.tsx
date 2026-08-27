@@ -200,7 +200,7 @@ export default function GuidePage() {
         </p>
         <p>
           C’est ce chiffre qui monte en flèche après une série de bonus ratés — et c’est lui que le{' '}
-          <Link href="/#bonus-hunt">Hunt Lab</Link> recalcule à chaque gain saisi.
+          <Link href="/bonus-hunt">Hunt Lab</Link> recalcule à chaque gain saisi.
         </p>
       </section>
 
@@ -289,7 +289,7 @@ export default function GuidePage() {
           le stockage local de votre navigateur — aucune donnée n’est envoyée sur un serveur.
         </p>
         <div className="compare-cta-row">
-          <Link className="button button-primary" href="/#bonus-hunt">
+          <Link className="button button-primary" href="/bonus-hunt">
             Ouvrir le Hunt Lab <ArrowIcon />
           </Link>
           <a

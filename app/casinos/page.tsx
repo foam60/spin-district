@@ -187,7 +187,7 @@ export default function CasinosPage() {
           <strong>liens d’affiliation</strong>. Si vous créez un compte via ces liens, Spin District
           peut percevoir une commission versée par l’opérateur — <strong>sans surcoût pour vous</strong>
           , et sans modifier les offres auxquelles vous avez droit. Ce financement permet de maintenir
-          le <Link href="/#bonus-hunt">Bonus Hunt Lab gratuit</Link>, le site et les animations
+          le <Link href="/bonus-hunt">Bonus Hunt Lab gratuit</Link>, le site et les animations
           communautaires.
         </p>
         <p>

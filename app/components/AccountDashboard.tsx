@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { LinkCodePanel, SignOutButton } from './AccountPanel';
 import { ArrowIcon, DiscordIcon, RumbleIcon } from './BrandIcons';
 import { links } from '../lib/site';
+import { POINTS_PER_USDT, formatPoints, formatUsdt } from '../lib/shop';
 
 export type AccountLink = { rumble_username: string; linked_at: string | null } | null;
 export type AccountPoints = { points: number | null; updated_at: string | null } | null;
@@ -67,6 +68,8 @@ export default function AccountDashboard({
   points: AccountPoints;
   activeCode: AccountCode;
 }) {
+  const balance = points?.points ?? 0;
+
   return (
     <>
       <section className="account-identity-bar" aria-label="Session en cours">
@@ -99,7 +102,7 @@ export default function AccountDashboard({
                 <h2>Mes points</h2>
               </header>
               <p className="points-value">
-                <strong>{(points?.points ?? 0).toLocaleString('fr-FR')}</strong>
+                <strong>{formatPoints(balance)}</strong>
                 <span>points</span>
               </p>
               {points?.updated_at && (
@@ -140,6 +143,9 @@ export default function AccountDashboard({
                   <span>Rappelle la liste des commandes</span>
                 </li>
               </ul>
+              <Link className="account-inline-link" href="/boutique">
+                Voir toutes les façons de gagner des points <ArrowIcon />
+              </Link>
             </article>
           </>
         ) : (
@@ -175,23 +181,28 @@ export default function AccountDashboard({
       </section>
 
       <section className="page-section" aria-labelledby="shop-title">
-        <article className="account-card is-soon">
+        <article className="account-card is-shop">
           <header className="account-card-head">
-            <span className="account-step-tag">Prochainement</span>
-            <h2 id="shop-title">
-              <span className="soon-lock" aria-hidden="true">
-                🔒
-              </span>{' '}
-              Boutique virtuelle
-            </h2>
+            <span className="account-step-tag">Boutique</span>
+            <h2 id="shop-title">Échangez vos points</h2>
           </header>
           <p className="account-card-text">
-            Vos points serviront à débloquer des avantages communautaires : rôles Discord, choix de
-            slots en live, participation aux tirages. Rien d’achetable avec de l’argent réel, rien de
-            convertible : uniquement du virtuel.
+            Vos points s’échangent contre des <strong>cartes cadeaux USDT</strong> de 5 à 100.
+            {link && balance > 0 ? (
+              <>
+                {' '}
+                Votre solde actuel vaut environ{' '}
+                <strong>{formatUsdt(balance / POINTS_PER_USDT)} USDT</strong>.
+              </>
+            ) : (
+              <> Comptez {formatPoints(POINTS_PER_USDT)} points pour 1 USDT.</>
+            )}
           </p>
           <div className="account-soon-links">
-            <Link className="button button-ghost" href="/#bonus-hunt">
+            <Link className="button button-primary" href="/boutique">
+              Ouvrir la boutique <ArrowIcon />
+            </Link>
+            <Link className="button button-ghost" href="/bonus-hunt">
               Ouvrir le Hunt Lab <ArrowIcon />
             </Link>
             <Link className="button button-ghost" href="/jeu-responsable">

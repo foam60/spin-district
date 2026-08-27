@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import BonusHuntBoard from './components/BonusHuntBoard';
 import CasinoCards from './components/CasinoCards';
 import ResponsibleBanner from './components/ResponsibleBanner';
 import ScrollTopButton from './components/ScrollTopButton';
@@ -17,31 +16,6 @@ import { links, siteUrl } from './lib/site';
 const homeJsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
-    {
-      '@type': 'WebApplication',
-      '@id': `${siteUrl}/#app`,
-      name: 'Spin District Bonus Hunt Lab',
-      url: `${siteUrl}/#bonus-hunt`,
-      applicationCategory: 'UtilitiesApplication',
-      operatingSystem: 'All',
-      browserRequirements: 'Requires JavaScript. Requires HTML5.',
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'EUR',
-        availability: 'https://schema.org/InStock',
-      },
-      description:
-        'Outil gratuit de suivi et de gestion de Bonus Hunts de casino : calcul en temps réel du multiplicateur, du break-even, stats détaillées et sauvegarde locale automatique.',
-      featureList: [
-        'Catalogue de +2 000 machines à sous (Pragmatic, Hacksaw, Nolimit City, Play’n GO)',
-        'Calcul en direct du multiplicateur moyen',
-        'Calcul automatique du point d’équilibre (break-even fixe et évolutif)',
-        'Sauvegarde locale automatique dans le navigateur',
-        'Export CSV et JSON des sessions',
-        'Mode overlay plein écran pour le streaming',
-      ],
-    },
     {
       '@type': 'FAQPage',
       '@id': `${siteUrl}/#faq`,
@@ -133,7 +107,7 @@ export default function Home() {
           <div className="hero-actions">
             <a
               className="button button-primary"
-              href="#bonus-hunt"
+              href="/bonus-hunt"
               title="Accéder au tracker de Bonus Hunt gratuit"
             >
               Ouvrir le Hunt Lab <ArrowIcon />
@@ -401,11 +375,11 @@ export default function Home() {
         </p>
       </section>
 
-      {/* SECTION BONUS HUNT LAB */}
+      {/* SECTION HUNT LAB (renvoi vers la page dédiée) */}
       <section className="hunt-section section-shell" id="bonus-hunt" aria-labelledby="hunt-title">
         <div className="section-heading hunt-heading">
           <div>
-            <span className="section-index">02 — BONUS HUNT LAB</span>
+            <span className="section-index">02 — HUNT LAB</span>
             <h2 id="hunt-title">
               TES CHASSES
               <br />
@@ -414,58 +388,51 @@ export default function Home() {
           </div>
           <div className="hunt-heading-desc">
             <p>
-              Créez une session, ajoutez vos machines une à une, notez les mises et renseignez les
-              gains lors de l’ouverture.
+              Le <strong>Bonus Hunt Lab</strong> est notre tracker de chasses aux bonus : gratuit,
+              sans inscription, avec le calcul en direct du multiplicateur moyen et du break-even.
             </p>
             <p className="storage-highlight">
-              💡 <strong>Sauvegarde locale automatique :</strong> Fermez l’onglet, éteignez votre
-              ordinateur : toutes vos sessions passées et leurs tableaux restent consultables et
-              modifiables lors de votre prochaine visite.
+              💡 <strong>Sauvegarde locale automatique :</strong> fermez l’onglet, éteignez votre
+              ordinateur : toutes vos sessions restent consultables et modifiables lors de votre
+              prochaine visite.
             </p>
           </div>
         </div>
 
-        <BonusHuntBoard />
+        <div className="hunt-teaser">
+          <ul className="hunt-teaser-features">
+            <li>
+              <strong>2 000+</strong>
+              <span>machines au catalogue</span>
+            </li>
+            <li>
+              <strong>Break-even</strong>
+              <span>fixe et évolutif, en direct</span>
+            </li>
+            <li>
+              <strong>CSV / JSON</strong>
+              <span>export et sauvegarde</span>
+            </li>
+            <li>
+              <strong>Mode stream</strong>
+              <span>overlay plein écran pour OBS</span>
+            </li>
+          </ul>
 
-        <div className="hunt-howto">
-          <article>
-            <div className="howto-header">
-              <span className="step-num">01</span>
-              <h3>CRÉEZ VOTRE HUNT</h3>
-            </div>
+          <div className="hunt-teaser-cta">
             <p>
-              Nommez votre session (ex: Session Samedi) et définissez votre bankroll de départ. Elle
-              apparaît instantanément dans votre barre de sessions.
+              Ouvrez le Hunt Lab dans son espace dédié : sessions illimitées, tableau complet et
+              statistiques de la chasse.
             </p>
-          </article>
-
-          <article>
-            <div className="howto-header">
-              <span className="step-num">02</span>
-              <h3>REMPLISSEZ LE TABLEAU</h3>
+            <div className="hunt-teaser-actions">
+              <Link className="button button-primary" href="/bonus-hunt">
+                Ouvrir le Hunt Lab <ArrowIcon />
+              </Link>
+              <Link className="button button-ghost" href="/guide-bonus-hunt">
+                Lire le guide <ArrowIcon />
+              </Link>
             </div>
-            <p>
-              Sélectionnez vos machines dans le catalogue de plus de 2 000 slots ou ajoutez vos
-              titres personnalisés avec leur mise.
-            </p>
-          </article>
-
-          <article>
-            <div className="howto-header">
-              <span className="step-num">03</span>
-              <h3>SUIVEZ VOS GAINS</h3>
-            </div>
-            <p>
-              Saisissez les gains lors de l’ouverture : calcul en direct du multiplicateur, du
-              break-even et du profit net. Tout est sauvegardé automatiquement.
-            </p>
-          </article>
-        </div>
-
-        <div className="section-cta-row">
-          <Link className="button button-ghost" href="/guide-bonus-hunt">
-            Lire le guide complet du Bonus Hunt <ArrowIcon />
-          </Link>
+          </div>
         </div>
       </section>
 

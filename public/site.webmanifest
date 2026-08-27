@@ -41,7 +41,13 @@
       "name": "Bonus Hunt Lab",
       "short_name": "Hunt Lab",
       "description": "Ouvrir le tracker de bonus hunts",
-      "url": "/#bonus-hunt"
+      "url": "/bonus-hunt"
+    },
+    {
+      "name": "Boutique de points",
+      "short_name": "Boutique",
+      "description": "Échanger ses points contre des cartes cadeaux USDT",
+      "url": "/boutique"
     },
     {
       "name": "Casinos partenaires",

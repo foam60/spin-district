@@ -5310,3 +5310,489 @@ article[id] {
     padding: 0 5px;
   }
 }
+
+/* =========================================================================
+   ACCUEIL : BLOC D'APPEL VERS LE HUNT LAB
+   ========================================================================= */
+
+.hunt-teaser {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.hunt-teaser-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hunt-teaser-features li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--green);
+  border-radius: 0 12px 12px 0;
+  background: var(--panel-card);
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.hunt-teaser-features li:hover {
+  transform: translateY(-2px);
+  border-color: var(--panel-border);
+  border-left-color: var(--green-bright);
+}
+
+.hunt-teaser-features strong {
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.hunt-teaser-features span {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.hunt-teaser-cta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+  padding: 30px;
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  background: linear-gradient(150deg, rgba(168, 255, 0, 0.07), rgba(10, 17, 13, 0.95));
+}
+
+.hunt-teaser-cta p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #c3ccc5;
+}
+
+.hunt-teaser-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* La page dédiée n'a pas de titre de section au-dessus du tableau. */
+.hunt-page-board {
+  margin-bottom: 72px;
+  scroll-margin-top: 100px;
+}
+
+/* =========================================================================
+   BOUTIQUE : SOLDE
+   ========================================================================= */
+
+.shop-balance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 44px;
+  padding: 24px 28px;
+  border: 1px solid rgba(16, 232, 107, 0.28);
+  border-radius: 14px;
+  background: linear-gradient(140deg, rgba(16, 232, 107, 0.07), rgba(10, 17, 13, 0.92));
+}
+
+.shop-balance.is-locked {
+  border-color: var(--panel-border);
+  background: linear-gradient(140deg, rgba(168, 255, 0, 0.05), rgba(10, 17, 13, 0.92));
+}
+
+.shop-balance-tag {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+}
+
+.shop-balance .points-value {
+  margin-bottom: 6px;
+}
+
+.shop-balance small {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.shop-balance small b {
+  color: var(--emerald);
+}
+
+.shop-locked-text {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* =========================================================================
+   BOUTIQUE : CARTES CADEAUX
+   ========================================================================= */
+
+.giftcard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 18px;
+}
+
+.giftcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 26px 22px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-card);
+  text-align: center;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.giftcard:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-strong);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.45);
+}
+
+.giftcard.is-featured {
+  border-color: rgba(168, 255, 0, 0.4);
+  background: linear-gradient(165deg, rgba(168, 255, 0, 0.07), rgba(14, 23, 17, 0.96));
+}
+
+.giftcard.is-affordable {
+  border-color: rgba(16, 232, 107, 0.45);
+  box-shadow: 0 0 26px rgba(16, 232, 107, 0.12);
+}
+
+.giftcard-flag {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--green);
+  color: #050a02;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.giftcard-amount {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+}
+
+.giftcard-amount strong {
+  font-family: var(--font-mono);
+  font-size: clamp(38px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--white);
+}
+
+.giftcard.is-featured .giftcard-amount strong {
+  color: var(--green);
+}
+
+.giftcard-amount span {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.giftcard-cost {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: #cbd4cd;
+}
+
+.giftcard-cost small {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+}
+
+.giftcard-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.giftcard-progress-bar {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.giftcard-progress-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--green), var(--emerald));
+}
+
+.giftcard-progress small {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+}
+
+.giftcard.is-affordable .giftcard-progress small {
+  color: var(--emerald);
+}
+
+.giftcard-cta {
+  margin-top: auto;
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.giftcard-cta.is-disabled {
+  border: 1px dashed var(--line-strong);
+  color: var(--muted-dark);
+  cursor: not-allowed;
+}
+
+.shop-rate-note {
+  max-width: 78ch;
+  margin: 26px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted-dark);
+}
+
+/* =========================================================================
+   BOUTIQUE : COMMENT GAGNER DES POINTS
+   ========================================================================= */
+
+.shop-earn-intro {
+  max-width: 74ch;
+  margin-bottom: 24px;
+}
+
+.earn-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.earn-list li {
+  display: grid;
+  grid-template-columns: 108px 1fr auto;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.earn-list li:hover {
+  transform: translateX(3px);
+  border-color: var(--panel-border);
+}
+
+.earn-tag {
+  justify-self: start;
+  padding: 6px 12px;
+  border: 1px solid rgba(168, 255, 0, 0.3);
+  border-radius: 999px;
+  background: var(--green-subtle);
+  color: var(--green);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.earn-copy strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.earn-copy p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.earn-rhythm {
+  justify-self: end;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+  white-space: nowrap;
+}
+
+/* =========================================================================
+   COMPTE : CARTE BOUTIQUE
+   ========================================================================= */
+
+.account-card.is-shop {
+  border-color: rgba(168, 255, 0, 0.3);
+  background: linear-gradient(160deg, rgba(168, 255, 0, 0.06), rgba(14, 23, 17, 0.95));
+}
+
+.account-inline-link {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--green);
+  border-bottom: 1px solid rgba(168, 255, 0, 0.35);
+  transition: border-color 0.2s ease;
+}
+
+.account-inline-link:hover {
+  border-bottom-color: var(--green);
+}
+
+/* =========================================================================
+   RESPONSIVE
+   ========================================================================= */
+
+@media (max-width: 992px) {
+  .hunt-teaser {
+    grid-template-columns: 1fr;
+  }
+
+  .earn-list li {
+    grid-template-columns: 96px 1fr;
+    gap: 14px 16px;
+  }
+
+  .earn-rhythm {
+    grid-column: 2;
+    justify-self: start;
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .hunt-teaser-features {
+    grid-template-columns: 1fr;
+  }
+
+  .hunt-teaser-cta {
+    padding: 22px;
+  }
+
+  .hunt-teaser-actions .button {
+    width: 100%;
+  }
+
+  .shop-balance {
+    padding: 20px;
+  }
+
+  .shop-balance .button {
+    width: 100%;
+  }
+
+  .giftcard-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .giftcard {
+    padding: 22px 14px;
+  }
+
+  .earn-list li {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .earn-rhythm {
+    grid-column: 1;
+  }
+}
+
+/* =========================================================================
+   HEADER : DÉGRADATION DE LA NAVIGATION SUR LES LARGEURS INTERMÉDIAIRES
+   La barre porte 7 entrées + 3 CTA : sans ces paliers, .header-end sortait
+   du viewport autour de 1024px.
+   ========================================================================= */
+
+@media (max-width: 1240px) {
+  .site-header {
+    gap: 20px;
+  }
+
+  .desktop-nav {
+    gap: 20px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1140px) {
+  /* Lives et Communauté restent dans le menu mobile et le footer. */
+  .desktop-nav .nav-link.is-secondary {
+    display: none;
+  }
+}
