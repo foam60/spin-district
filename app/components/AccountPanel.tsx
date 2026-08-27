@@ -13,28 +13,46 @@ type LinkCodeError = { error: string; code?: never; expiresAt?: never };
 /** Bouton de connexion Discord (état déconnecté). */
 export function DiscordSignIn() {
   const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const signIn = async () => {
     setPending(true);
+    setError(null);
     const supabase = createClient();
     // Aucune query string ici : Supabase compare l'URL de redirection à sa
     // liste blanche en incluant les paramètres. Un `?next=…` ne matcherait
     // pas une entrée `.../auth/callback` et Supabase retomberait
     // silencieusement sur le Site URL (l'utilisateur atterrit sur l'accueil,
     // non connecté).
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { error: signInError } = await supabase.auth.signInWithOAuth({
       provider: 'discord',
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
-    if (error) setPending(false);
+    if (signInError) {
+      setError('Connexion Discord indisponible pour le moment. Réessayez.');
+      setPending(false);
+    }
   };
 
   return (
-    <button type="button" className="button button-primary" onClick={signIn} disabled={pending}>
-      <DiscordIcon size={16} />
-      {pending ? 'Redirection…' : 'Se connecter avec Discord'}
-      <ArrowIcon />
-    </button>
+    <>
+      <button
+        type="button"
+        className="discord-auth-btn"
+        onClick={signIn}
+        disabled={pending}
+        aria-busy={pending}
+      >
+        <DiscordIcon size={20} />
+        <span>{pending ? 'Redirection vers Discord…' : 'Se connecter avec Discord'}</span>
+        <ArrowIcon />
+      </button>
+      {error && (
+        <p className="account-notice is-error" role="alert">
+          {error}
+        </p>
+      )}
+    </>
   );
 }
 
@@ -48,17 +66,26 @@ export function LinkCodePanel({ initialCode }: { initialCode: ActiveCode | null 
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
+  // Durée de référence de la jauge : le plus grand « restant » observé pour le
+  // code courant. Évite de coupler l'affichage à la variable d'env du serveur.
+  const [total, setTotal] = useState(remaining);
+
   // Décompte : le code doit visiblement expirer, sinon l'utilisateur tape un
   // code mort et ne comprend pas le refus du bot.
   useEffect(() => {
     if (!active) return;
-    const tick = () => setRemaining(secondsUntil(active.expiresAt));
+    const tick = () => {
+      const left = secondsUntil(active.expiresAt);
+      setRemaining(left);
+      setTotal((previous) => Math.max(previous, left));
+    };
     tick();
     const timer = setInterval(tick, 1000);
     return () => clearInterval(timer);
   }, [active]);
 
   const expired = active !== null && remaining <= 0;
+  const percent = active && !expired && total > 0 ? Math.min(100, (remaining / total) * 100) : 0;
 
   const request = useCallback(async () => {
     setPending(true);
@@ -71,6 +98,7 @@ export function LinkCodePanel({ initialCode }: { initialCode: ActiveCode | null 
         setError(payload.error ?? 'Erreur inattendue.');
         return;
       }
+      setTotal(0);
       setActive({ code: payload.code, expiresAt: payload.expiresAt });
     } catch {
       setError('Connexion impossible. Réessayez.');
@@ -93,24 +121,29 @@ export function LinkCodePanel({ initialCode }: { initialCode: ActiveCode | null 
   };
 
   return (
-    <div className="content-card">
-      <span className="card-kicker">Étape 2</span>
-      <h3>Lier votre pseudo Rumble</h3>
+    <article className="account-card is-current" aria-labelledby="link-step-title">
+      <header className="account-card-head">
+        <span className="account-step-tag">Étape 2</span>
+        <h2 id="link-step-title">Lier votre pseudo Rumble</h2>
+      </header>
 
       {!active || expired ? (
         <>
-          <p className="card-copy">
-            Générez un code, puis tapez-le dans le chat du live pour associer votre pseudo
-            Rumble à ce compte. Vos points deviendront visibles ici.
+          <p className="account-card-text">
+            Générez un code à usage unique, puis tapez-le dans le chat du live. Le bot associe
+            alors le pseudo Rumble utilisé à ce compte, et vos points apparaissent ici.
           </p>
           {expired && (
-            <p className="alert-box">Ce code a expiré. Générez-en un nouveau.</p>
+            <p className="account-notice is-warning" role="status">
+              Ce code a expiré. Générez-en un nouveau pour réessayer.
+            </p>
           )}
           <button
             type="button"
-            className="button button-primary"
+            className="button button-primary account-action"
             onClick={request}
             disabled={pending}
+            aria-busy={pending}
           >
             {pending ? 'Génération…' : expired ? 'Générer un nouveau code' : 'Générer mon code'}
             <ArrowIcon />
@@ -118,32 +151,52 @@ export function LinkCodePanel({ initialCode }: { initialCode: ActiveCode | null 
         </>
       ) : (
         <>
-          <p className="card-copy">
+          <p className="account-card-text">
             Copiez cette commande et collez-la dans le chat Rumble pendant le live :
           </p>
 
-          <div className="compact-input-group">
-            <code className="formula" aria-label={`Commande à taper : ${command}`}>
-              {command}
-            </code>
-            <button type="button" className="button button-ghost" onClick={copy}>
-              {copied ? 'Copié ✓' : 'Copier'}
+          <div className="code-block">
+            <code aria-label={`Commande à taper dans le chat : ${command}`}>{command}</code>
+            <button
+              type="button"
+              className={`code-copy-btn ${copied ? 'is-copied' : ''}`}
+              onClick={copy}
+            >
+              {copied ? '✓ Copié' : 'Copier'}
             </button>
           </div>
 
-          <p className="offer-terms">
-            Valable encore <strong>{formatCountdown(remaining)}</strong> · usage unique ·
-            ne fonctionne que depuis le pseudo Rumble que vous souhaitez lier.
-          </p>
+          <div className="code-countdown">
+            <div className="code-countdown-bar" aria-hidden="true">
+              <span style={{ width: `${percent}%` }} suppressHydrationWarning />
+            </div>
+            <p suppressHydrationWarning>
+              Valable encore <strong>{formatCountdown(remaining)}</strong>
+            </p>
+          </div>
 
-          <button type="button" className="button button-ghost" onClick={request} disabled={pending}>
+          <ul className="account-hint-list">
+            <li>Usage unique : le code est consommé dès qu’il est validé.</li>
+            <li>À taper depuis le pseudo Rumble que vous voulez lier.</li>
+          </ul>
+
+          <button
+            type="button"
+            className="account-text-btn"
+            onClick={request}
+            disabled={pending}
+          >
             {pending ? 'Génération…' : 'Générer un autre code'}
           </button>
         </>
       )}
 
-      {error && <p className="alert-box text-danger">{error}</p>}
-    </div>
+      {error && (
+        <p className="account-notice is-error" role="alert">
+          {error}
+        </p>
+      )}
+    </article>
   );
 }
 
@@ -151,7 +204,7 @@ export function LinkCodePanel({ initialCode }: { initialCode: ActiveCode | null 
 export function SignOutButton() {
   return (
     <form action="/auth/signout" method="post">
-      <button type="submit" className="button button-ghost">
+      <button type="submit" className="account-signout-btn">
         Se déconnecter
       </button>
     </form>

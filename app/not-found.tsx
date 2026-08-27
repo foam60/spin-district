@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <main id="main-content">
-      <SiteHeader discordUrl={links.discord} telegramUrl={links.telegram} stakeUrl={links.stake} />
+      <SiteHeader discordUrl={links.discord} telegramUrl={links.telegram} />
 
       <section className="notfound section-shell" id="top">
         <span className="notfound-code" aria-hidden="true">

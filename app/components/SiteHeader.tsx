@@ -4,7 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { ArrowIcon, DiscordIcon, StakeMark, TelegramIcon } from './BrandIcons';
+import { ArrowIcon, DiscordIcon, TelegramIcon } from './BrandIcons';
+import HeaderAccountButton from './HeaderAccountButton';
 
 type NavItem = { label: string; href: string; anchor?: string; tag?: string };
 
@@ -15,7 +16,6 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Lives', href: '/#live', anchor: 'live' },
   { label: 'Communauté', href: '/#communaute', anchor: 'communaute' },
   { label: 'FAQ', href: '/#faq', anchor: 'faq' },
-  { label: 'Mon compte', href: '/compte' },
 ];
 
 const SPY_SECTIONS = ['offre', 'bonus-hunt', 'live', 'communaute', 'faq'];
@@ -23,11 +23,9 @@ const SPY_SECTIONS = ['offre', 'bonus-hunt', 'live', 'communaute', 'faq'];
 export default function SiteHeader({
   discordUrl,
   telegramUrl,
-  stakeUrl,
 }: {
   discordUrl: string;
   telegramUrl: string;
-  stakeUrl: string;
 }) {
   const pathname = usePathname();
   const isHome = pathname === '/';
@@ -127,11 +125,6 @@ export default function SiteHeader({
       </nav>
 
       <div className="header-end">
-        <div className="live-status-indicator" title="Suivez nos lives réguliers sur Rumble">
-          <span className="live-pulse" />
-          <span className="live-label">LIVE &amp; VOD</span>
-        </div>
-
         <a
           className="header-telegram-cta"
           href={telegramUrl}
@@ -149,19 +142,6 @@ export default function SiteHeader({
         </a>
 
         <a
-          className="header-stake-cta"
-          href={stakeUrl}
-          target="_blank"
-          rel="sponsored noopener noreferrer"
-          aria-label="Ouvrir Stake via le lien partenaire Spin District (nouvelle fenêtre)"
-          title="Stake — lien partenaire Spin District"
-        >
-          <StakeMark size={20} />
-          <span className="stake-cta-label">Stake</span>
-          <ArrowIcon />
-        </a>
-
-        <a
           className="header-cta"
           href={discordUrl}
           target="_blank"
@@ -171,6 +151,8 @@ export default function SiteHeader({
           <DiscordIcon size={15} />
           <span>Discord</span>
         </a>
+
+        <HeaderAccountButton />
 
         <button
           className="menu-toggle"
@@ -227,7 +209,7 @@ export default function SiteHeader({
               <Link href="/#faq" onClick={close}>
                 <span>06</span> FAQ &amp; Guides <ArrowIcon />
               </Link>
-              <Link href="/compte" onClick={close}>
+              <Link href="/compte" onClick={close} className="highlight">
                 <span>07</span> Mon compte &amp; points <ArrowIcon />
               </Link>
               <a
@@ -251,14 +233,6 @@ export default function SiteHeader({
                 rel="noopener noreferrer"
               >
                 <TelegramIcon /> Rejoindre Telegram VIP <ArrowIcon />
-              </a>
-              <a
-                className="button button-stake"
-                href={stakeUrl}
-                target="_blank"
-                rel="sponsored noopener noreferrer"
-              >
-                <StakeMark size={18} /> Jouer sur Stake <ArrowIcon />
               </a>
               <a
                 className="button button-primary"

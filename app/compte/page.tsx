@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import AccountDashboard, { Stepper } from '../components/AccountDashboard';
 import PageShell from '../components/PageShell';
-import { DiscordSignIn, LinkCodePanel, SignOutButton } from '../components/AccountPanel';
-import { ArrowIcon } from '../components/BrandIcons';
+import { DiscordSignIn } from '../components/AccountPanel';
+import { DiscordIcon } from '../components/BrandIcons';
 import { links, siteUrl } from '../lib/site';
 import { createClient } from '@/utils/supabase/server';
 
@@ -61,95 +61,83 @@ export default async function ComptePage({
         ).data
       : null;
 
-  const pseudo = user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? user?.email;
+  const pseudo = String(
+    user?.user_metadata?.full_name ?? user?.user_metadata?.name ?? user?.email ?? 'Membre'
+  );
+  const avatarUrl =
+    typeof user?.user_metadata?.avatar_url === 'string' ? user.user_metadata.avatar_url : null;
 
   return (
     <PageShell
-      eyebrow="Espace membre"
-      title={<>Mon compte Spin District</>}
+      eyebrow="ESPACE MEMBRE"
+      title={
+        <>
+          MON COMPTE
+          <br />
+          <span className="gradient-text">SPIN DISTRICT</span>
+        </>
+      }
       intro={
-        <p>
-          Liez votre pseudo Rumble à votre compte Discord pour cumuler des points pendant
-          les lives et les dépenser dans la boutique virtuelle.
-        </p>
+        <>
+          <p>
+            Liez votre pseudo Rumble à votre compte Discord pour cumuler des points pendant les
+            lives et les dépenser dans la boutique virtuelle.
+          </p>
+          <p className="page-hero-note">
+            Points 100 % virtuels • Ni achetables ni convertibles en argent • 18+
+          </p>
+        </>
       }
       crumbs={[{ name: 'Mon compte', path: '/compte' }]}
     >
-      {error && <p className="alert-box text-danger">{ERRORS[error] ?? 'Une erreur est survenue.'}</p>}
+      {error && (
+        <p className="account-notice is-error account-notice-top" role="alert">
+          {ERRORS[error] ?? 'Une erreur est survenue.'}
+        </p>
+      )}
 
       {!user ? (
-        <section className="page-section">
-          <div className="content-card">
-            <span className="card-kicker">Étape 1</span>
-            <h3>Se connecter</h3>
-            <p className="card-copy">
-              La connexion se fait via Discord. Aucun mot de passe à créer, aucune donnée
-              bancaire : les points sont purement virtuels et ne sont ni achetables ni
-              convertibles en argent.
-            </p>
-            <DiscordSignIn />
-            <p className="offer-terms">
-              Pas encore sur le serveur ?{' '}
-              <a href={links.discord} target="_blank" rel="noopener noreferrer">
-                Rejoindre le Discord Spin District
-              </a>
-              .
-            </p>
-          </div>
-        </section>
-      ) : (
-        <section className="page-section">
-          <div className="content-grid">
-            <div className="content-card">
-              <span className="card-kicker">Connecté</span>
-              <h3>{pseudo}</h3>
-              <p className="card-copy">
-                {link ? (
-                  <>
-                    Pseudo Rumble lié : <strong>{link.rumble_username}</strong>
-                  </>
-                ) : (
-                  <>Aucun pseudo Rumble lié pour l’instant.</>
-                )}
+        <>
+          <Stepper current={0} />
+
+          <section className="page-section account-auth-section" aria-labelledby="signin-title">
+            <div className="account-auth-card">
+              <span className="auth-glyph" aria-hidden="true">
+                <DiscordIcon size={26} />
+              </span>
+              <h2 id="signin-title">Connectez-vous avec Discord</h2>
+              <p>
+                Un seul clic, aucun mot de passe à créer et aucune donnée bancaire. Votre compte
+                Discord sert uniquement d’identifiant pour rattacher vos points.
               </p>
-              <SignOutButton />
+
+              <DiscordSignIn />
+
+              <ul className="account-hint-list is-checks">
+                <li>Aucun mot de passe, aucune carte bancaire</li>
+                <li>Points purement virtuels, non convertibles en argent</li>
+                <li>Déconnexion possible à tout moment</li>
+              </ul>
+
+              <p className="account-auth-footer">
+                Pas encore sur le serveur ?{' '}
+                <a href={links.discord} target="_blank" rel="noopener noreferrer">
+                  Rejoindre le Discord Spin District ↗
+                </a>
+              </p>
             </div>
-
-            {link ? (
-              <div className="content-card">
-                <span className="card-kicker">Solde</span>
-                <h3>{points?.points ?? 0} points</h3>
-                <p className="card-copy">
-                  Vous gagnez des points en participant au chat pendant les lives, et avec
-                  la commande <code>!bonus</code> une fois par heure.
-                </p>
-                <p className="offer-terms">
-                  Commandes du chat : <code>!points</code> · <code>!bonus</code> ·{' '}
-                  <code>!help</code>
-                </p>
-              </div>
-            ) : (
-              <LinkCodePanel
-                initialCode={
-                  activeCode ? { code: activeCode.code, expiresAt: activeCode.expires_at } : null
-                }
-              />
-            )}
-          </div>
-
-          <div className="content-card">
-            <span className="card-kicker">Prochainement</span>
-            <h3>Boutique virtuelle</h3>
-            <p className="card-copy">
-              Vos points serviront à débloquer des avantages communautaires. Rien
-              d’achetable avec de l’argent réel, rien de convertible : uniquement du
-              virtuel.
-            </p>
-            <Link className="button button-ghost" href={links.stream} target="_blank">
-              Voir le live en cours <ArrowIcon />
-            </Link>
-          </div>
-        </section>
+          </section>
+        </>
+      ) : (
+        <AccountDashboard
+          pseudo={pseudo}
+          avatarUrl={avatarUrl}
+          link={link}
+          points={points}
+          activeCode={
+            activeCode ? { code: activeCode.code, expiresAt: activeCode.expires_at } : null
+          }
+        />
       )}
     </PageShell>
   );

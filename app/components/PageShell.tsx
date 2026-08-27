@@ -58,7 +58,7 @@ export default function PageShell({
 }) {
   return (
     <main id="main-content">
-      <SiteHeader discordUrl={links.discord} telegramUrl={links.telegram} stakeUrl={links.stake} />
+      <SiteHeader discordUrl={links.discord} telegramUrl={links.telegram} />
 
       <div className="page-shell section-shell" id="top">
         <Breadcrumbs crumbs={crumbs} />

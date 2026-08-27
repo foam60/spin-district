@@ -106,7 +106,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
       />
-      <SiteHeader discordUrl={links.discord} telegramUrl={links.telegram} stakeUrl={links.stake} />
+      <SiteHeader discordUrl={links.discord} telegramUrl={links.telegram} />
 
       {/* HERO SECTION */}
       <section className="hero section-shell" id="top" aria-labelledby="hero-title">

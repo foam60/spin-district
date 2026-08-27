@@ -84,43 +84,22 @@ export function StakeMark({ size = 22 }: { size?: number }) {
   );
 }
 
-/** Logo Stake complet : monogramme + wordmark. */
-export function StakeLogo({
-  size = 22,
-  showWordmark = true,
-}: {
-  size?: number;
-  showWordmark?: boolean;
-}) {
+export function UserIcon({ size = 16 }: { size?: number }) {
   return (
-    <span className="stake-logo" role="img" aria-label="Stake">
-      <StakeMark size={size} />
-      {showWordmark && (
-        <span className="stake-wordmark" style={{ fontSize: size * 0.86 }} aria-hidden="true">
-          Stake
-        </span>
-      )}
-    </span>
-  );
-}
-
-/** Logo Celsius (texte, aligné sur le style du wordmark Stake). */
-export function CelsiusLogo({ size = 22 }: { size?: number }) {
-  return (
-    <span className="celsius-logo" role="img" aria-label="Celsius Casino">
-      <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" style={{ flexShrink: 0 }}>
-        <rect width="32" height="32" rx="8" fill="#0a140a" />
-        <path
-          d="M22 11a7 7 0 1 0 0 10"
-          stroke="#a8ff00"
-          strokeWidth="3.4"
-          strokeLinecap="round"
-          fill="none"
-        />
-      </svg>
-      <span className="celsius-wordmark-text" style={{ fontSize: size * 0.86 }} aria-hidden="true">
-        Celsius
-      </span>
-    </span>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={{ flexShrink: 0 }}
+    >
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
   );
 }
