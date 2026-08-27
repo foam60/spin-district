@@ -20,6 +20,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Casinos', href: '/casinos' },
   { label: 'Hunt Lab', href: '/bonus-hunt', tag: 'HOT' },
   { label: 'Boutique', href: '/boutique' },
+  { label: 'Blackjack', href: '/blackjack', secondary: true },
   { label: 'Guide', href: '/guide-bonus-hunt' },
   { label: 'Lives', href: '/#live', anchor: 'live', secondary: true },
   { label: 'Communauté', href: '/#communaute', anchor: 'communaute', secondary: true },
@@ -209,20 +210,23 @@ export default function SiteHeader({
               <Link href="/boutique" onClick={close}>
                 <span>03</span> Boutique &amp; cartes cadeaux <ArrowIcon />
               </Link>
+              <Link href="/blackjack" onClick={close}>
+                <span>04</span> Blackjack à points <ArrowIcon />
+              </Link>
               <Link href="/guide-bonus-hunt" onClick={close}>
-                <span>04</span> Guide du Bonus Hunt <ArrowIcon />
+                <span>05</span> Guide du Bonus Hunt <ArrowIcon />
               </Link>
               <Link href="/#live" onClick={close}>
-                <span>05</span> Lives Rumble &amp; Formats <ArrowIcon />
+                <span>06</span> Lives Rumble &amp; Formats <ArrowIcon />
               </Link>
               <Link href="/#communaute" onClick={close}>
-                <span>06</span> Communauté <ArrowIcon />
+                <span>07</span> Communauté <ArrowIcon />
               </Link>
               <Link href="/#faq" onClick={close}>
-                <span>07</span> FAQ &amp; Guides <ArrowIcon />
+                <span>08</span> FAQ &amp; Guides <ArrowIcon />
               </Link>
               <Link href="/compte" onClick={close} className="highlight">
-                <span>08</span> Mon compte &amp; points <ArrowIcon />
+                <span>09</span> Mon compte &amp; points <ArrowIcon />
               </Link>
               <a
                 href={telegramUrl}

@@ -3,12 +3,19 @@ import Link from 'next/link';
 import PageShell from '../components/PageShell';
 import { ArrowIcon, DiscordIcon, RumbleIcon } from '../components/BrandIcons';
 import { links, siteUrl } from '../lib/site';
-import { EARN_METHODS, GIFT_CARDS, POINTS_PER_USDT, formatPoints, formatUsdt } from '../lib/shop';
+import {
+  BONUS_BUYS,
+  EARN_METHODS,
+  GIFT_CARDS,
+  POINTS_PER_USDT,
+  formatPoints,
+  formatUsdt,
+} from '../lib/shop';
 import { createClient } from '@/utils/supabase/server';
 
-const title = 'Boutique — échangez vos points contre des cartes cadeaux USDT';
+const title = 'Boutique — cartes cadeaux USDT et bonus buys en live';
 const description =
-  'Échangez les points gagnés pendant les lives Spin District contre des cartes cadeaux USDT de 5, 10, 20, 50 ou 100. Points gagnés en participant au chat, avec le bonus horaire et les raffles. 18+.';
+  'Échangez les points gagnés pendant les lives Spin District contre des cartes cadeaux USDT de 5 à 100, ou faites acheter un bonus buy en direct (Sweet Bonanza, Fruit Party, Gates of Olympus…) dont le gain vous est envoyé. 18+.';
 
 export const metadata: Metadata = {
   title,
@@ -38,26 +45,38 @@ export default async function BoutiquePage() {
   const balance = points?.points ?? 0;
   const canRedeem = Boolean(link);
 
+  /** État d'un article : abordable, hors budget, ou connexion requise. */
+  function itemState(cost: number) {
+    const missing = cost - balance;
+    return {
+      affordable: canRedeem && missing <= 0,
+      missing,
+      progress: canRedeem ? Math.min(100, Math.round((balance / cost) * 100)) : 0,
+    };
+  }
+
   return (
     <PageShell
-      eyebrow="BOUTIQUE — ÉCHANGE DE POINTS"
+      eyebrow="BOUTIQUE — DÉPENSER SES POINTS"
       title={
         <>
           TES POINTS
           <br />
-          <span className="gradient-text">EN CARTES CADEAUX USDT</span>
+          <span className="gradient-text">EN USDT OU EN BONUS</span>
         </>
       }
       intro={
         <>
           <p>
-            Les points cumulés pendant les lives s’échangent contre des cartes cadeaux{' '}
-            <strong>USDT</strong> de 5 à 100. Ils se gagnent uniquement en participant :{' '}
+            Deux façons de dépenser les points cumulés pendant les lives : des{' '}
+            <strong>cartes cadeaux USDT</strong> de 5 à 100, ou un{' '}
+            <strong>bonus buy acheté en direct</strong> sur la slot de votre choix — et c’est vous
+            qui encaissez le gain. Les points se gagnent uniquement en participant :{' '}
             <strong>aucun point n’est achetable avec de l’argent</strong>.
           </p>
           <p className="page-hero-note">
             Taux actuel : {formatPoints(POINTS_PER_USDT)} points = 1 USDT • Réservé aux membres
-            majeurs (18+) • Échange traité manuellement par l’équipe
+            majeurs (18+) • Échanges traités manuellement par l’équipe
           </p>
         </>
       }
@@ -96,17 +115,22 @@ export default async function BoutiquePage() {
         </section>
       )}
 
-      {/* Catalogue */}
-      <section className="page-section" aria-labelledby="cards-title">
-        <h2 id="cards-title">Cartes cadeaux disponibles</h2>
+      <nav className="shop-jump" aria-label="Sections de la boutique">
+        <a href="#cartes-cadeaux">Cartes cadeaux USDT</a>
+        <a href="#bonus-buys">Bonus buys en live</a>
+        <a href="#gagner">Gagner des points</a>
+      </nav>
+
+      {/* ------------------------------ CARTES CADEAUX --------------------- */}
+      <section className="page-section" id="cartes-cadeaux" aria-labelledby="cards-title">
+        <h2 id="cards-title">Cartes cadeaux USDT</h2>
+        <p className="account-card-text shop-earn-intro">
+          Valeur garantie, envoyée en message privé Discord après vérification du solde.
+        </p>
 
         <div className="giftcard-grid">
           {GIFT_CARDS.map((card) => {
-            const missing = card.points - balance;
-            const affordable = canRedeem && missing <= 0;
-            const progress = canRedeem
-              ? Math.min(100, Math.round((balance / card.points) * 100))
-              : 0;
+            const { affordable, missing, progress } = itemState(card.points);
 
             return (
               <article
@@ -165,9 +189,130 @@ export default async function BoutiquePage() {
         </p>
       </section>
 
-      {/* Procédure d'échange */}
+      {/* ------------------------------ BONUS BUYS ------------------------- */}
+      <section className="page-section" id="bonus-buys" aria-labelledby="bonus-title">
+        <h2 id="bonus-title">Bonus buys en live</h2>
+        <p className="account-card-text shop-earn-intro">
+          Vous choisissez la slot, on achète le bonus en direct sur le stream, et{' '}
+          <strong>l’intégralité du gain du bonus vous est envoyée en USDT</strong>. Moins cher au
+          dollar qu’une carte cadeau, parce que le résultat est aléatoire : un bonus peut rapporter
+          gros comme retomber sous le montant acheté.
+        </p>
+
+        <div className="bonusbuy-grid">
+          {BONUS_BUYS.map((item) => {
+            const { affordable, missing, progress } = itemState(item.points);
+
+            return (
+              <article
+                key={item.slug}
+                className={`bonusbuy ${item.featured ? 'is-featured' : ''} ${
+                  affordable ? 'is-affordable' : ''
+                }`}
+              >
+                <header className="bonusbuy-head">
+                  <span className="bonusbuy-provider">{item.provider}</span>
+                  <h3>{item.slot}</h3>
+                </header>
+
+                <div className="bonusbuy-amount">
+                  <span>Bonus acheté</span>
+                  <strong>{item.usdt} $</strong>
+                </div>
+
+                <p className="bonusbuy-cost">
+                  {formatPoints(item.points)} <small>points</small>
+                </p>
+
+                {canRedeem && (
+                  <div className="giftcard-progress">
+                    <div className="giftcard-progress-bar" aria-hidden="true">
+                      <span style={{ width: `${progress}%` }} />
+                    </div>
+                    <small>
+                      {affordable
+                        ? '✓ Solde suffisant'
+                        : `Il te manque ${formatPoints(missing)} points`}
+                    </small>
+                  </div>
+                )}
+
+                {affordable ? (
+                  <a
+                    className="button button-primary giftcard-cta"
+                    href={links.discord}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <DiscordIcon size={15} /> Réserver le bonus <ArrowIcon />
+                  </a>
+                ) : (
+                  <span className="giftcard-cta is-disabled" aria-disabled="true">
+                    {canRedeem ? 'Solde insuffisant' : 'Connexion requise'}
+                  </span>
+                )}
+              </article>
+            );
+          })}
+        </div>
+
+        <h3 className="shop-subheading">Comment se passe un bonus buy</h3>
+        <div className="hunt-howto">
+          <article>
+            <div className="howto-header">
+              <span className="step-num">01</span>
+              <h3>TU RÉSERVES</h3>
+            </div>
+            <p>
+              Ouvre un ticket Discord avec la slot, le montant et ton pseudo Rumble. Les points sont
+              débités à la validation de la réservation.
+            </p>
+          </article>
+          <article>
+            <div className="howto-header">
+              <span className="step-num">02</span>
+              <h3>ON L’ACHÈTE EN LIVE</h3>
+            </div>
+            <p>
+              Le bonus est acheté pendant le prochain stream, ton pseudo annoncé à l’antenne. Tu peux
+              suivre l’ouverture en direct sur la chaîne.
+            </p>
+          </article>
+          <article>
+            <div className="howto-header">
+              <span className="step-num">03</span>
+              <h3>LE GAIN TE REVIENT</h3>
+            </div>
+            <p>
+              Le montant gagné par le bonus t’est envoyé en USDT après le live, capture d’écran du
+              résultat à l’appui.
+            </p>
+          </article>
+        </div>
+
+        <div className="compare-cta-row">
+          <a
+            className="button button-ghost"
+            href={links.stream}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <RumbleIcon size={15} /> Voir la chaîne Rumble <ArrowIcon />
+          </a>
+          <a
+            className="button button-ghost"
+            href={links.telegram}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Être prévenu du prochain live <ArrowIcon />
+          </a>
+        </div>
+      </section>
+
+      {/* ------------------------------ ÉCHANGE ---------------------------- */}
       <section className="page-section" aria-labelledby="how-redeem-title">
-        <h2 id="how-redeem-title">Comment se passe un échange</h2>
+        <h2 id="how-redeem-title">Comment se passe un échange de carte</h2>
         <div className="hunt-howto">
           <article>
             <div className="howto-header">
@@ -202,8 +347,8 @@ export default async function BoutiquePage() {
         </div>
       </section>
 
-      {/* Comment gagner des points */}
-      <section className="page-section" aria-labelledby="earn-title">
+      {/* ------------------------------ GAGNER ----------------------------- */}
+      <section className="page-section" id="gagner" aria-labelledby="earn-title">
         <h2 id="earn-title">Comment gagner des points</h2>
         <p className="account-card-text shop-earn-intro">
           Les points ne s’achètent pas : ils se gagnent en étant présent et actif sur les lives.
@@ -232,18 +377,13 @@ export default async function BoutiquePage() {
           >
             <RumbleIcon size={15} /> Rejoindre le live <ArrowIcon />
           </a>
-          <a
-            className="button button-ghost"
-            href={links.telegram}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Être prévenu des lives <ArrowIcon />
-          </a>
+          <Link className="button button-ghost" href="/blackjack">
+            Jouer ses points au blackjack <ArrowIcon />
+          </Link>
         </div>
       </section>
 
-      {/* Conditions */}
+      {/* ------------------------------ CONDITIONS ------------------------- */}
       <section className="page-section prose disclosure-box" aria-labelledby="shop-terms-title">
         <h2 id="shop-terms-title">Conditions de la boutique</h2>
         <ul>
@@ -252,26 +392,48 @@ export default async function BoutiquePage() {
             animations de la communauté. Ils ne sont ni vendus, ni achetables avec de l’argent.
           </li>
           <li>
-            L’échange est réservé aux membres <strong>majeurs (18+)</strong> dont le pseudo Rumble
-            est lié à un compte Discord.
+            Les échanges sont réservés aux membres <strong>majeurs (18+)</strong> dont le pseudo
+            Rumble est lié à un compte Discord.
           </li>
           <li>
             Les points n’ont pas de valeur monétaire tant qu’ils ne sont pas échangés, ne sont pas
             transférables entre comptes et ne peuvent pas être remboursés.
           </li>
           <li>
-            Tout comportement visant à gonfler artificiellement un solde (multi-comptes, bots,
-            spam du chat) entraîne l’annulation des points et l’exclusion de la boutique.
+            Tout comportement visant à gonfler artificiellement un solde (multi-comptes, bots, spam
+            du chat) entraîne l’annulation des points et l’exclusion de la boutique.
           </li>
           <li>
             Le taux et les paliers peuvent évoluer. Les échanges déjà validés ne sont pas
             recalculés.
           </li>
           <li>
-            Selon votre pays de résidence, la réception d’une carte cadeau en cryptomonnaie peut
-            avoir des conséquences fiscales : c’est à vous de vous en assurer.
+            Selon votre pays de résidence, la réception d’USDT peut avoir des conséquences fiscales :
+            c’est à vous de vous en assurer.
           </li>
         </ul>
+
+        <h3 className="shop-subheading">Spécifique aux bonus buys</h3>
+        <ul>
+          <li>
+            Un bonus buy est acheté <strong>pendant un live</strong>. Sans stream planifié, la
+            réservation reste en file d’attente et les points ne sont débités qu’à sa validation.
+          </li>
+          <li>
+            Le gain versé est <strong>celui affiché à la fin du bonus</strong>, capture d’écran
+            fournie. Un bonus qui retombe sous le montant acheté ne donne droit à aucune
+            compensation et les points ne sont pas restitués.
+          </li>
+          <li>
+            Si la slot demandée n’est pas disponible sur le casino utilisé ce soir-là, vous choisissez
+            un autre titre du même montant, ou la réservation est annulée et les points restitués.
+          </li>
+          <li>
+            Une réservation par membre et par live tant que la file d’attente n’est pas écoulée, pour
+            que tout le monde puisse passer.
+          </li>
+        </ul>
+
         <p>
           Rappel : Spin District parle de casino en ligne, activité interdite aux mineurs et à
           risque. Consultez nos <Link href="/jeu-responsable">règles de jeu responsable</Link>.

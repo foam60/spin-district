@@ -42,6 +42,7 @@ export default function SiteFooter() {
           <Link href="/guide-bonus-hunt">Guide du Bonus Hunt</Link>
           <Link href="/bonus-hunt">Bonus Hunt Lab (tracker)</Link>
           <Link href="/boutique">Boutique &amp; points</Link>
+          <Link href="/blackjack">Blackjack à points</Link>
           <Link href="/#faq">FAQ &amp; Guides</Link>
           <Link href="/jeu-responsable">Jeu responsable &amp; 18+</Link>
         </div>
