@@ -6395,3 +6395,606 @@ article[id] {
     text-align: center;
   }
 }
+
+/* =========================================================================
+   HEADER : RACCOURCI ADMIN
+   ========================================================================= */
+
+.header-admin-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 176, 32, 0.5);
+  border-radius: 4px;
+  background: rgba(255, 176, 32, 0.12);
+  color: #ffb020;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+}
+
+.header-admin-cta:hover {
+  background: #ffb020;
+  border-color: #ffb020;
+  color: #1a1204;
+}
+
+.header-admin-badge {
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--coral);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* =========================================================================
+   BOUTIQUE : RETOURS DE DEMANDE
+   ========================================================================= */
+
+.giftcard-cta.is-sent {
+  margin-top: auto;
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(16, 232, 107, 0.45);
+  border-radius: 6px;
+  background: var(--emerald-subtle);
+  color: var(--emerald);
+  font-size: 11.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.shop-inline-error {
+  margin-top: 10px;
+  font-size: 12px;
+  text-align: left;
+}
+
+/* =========================================================================
+   FORMULAIRE DE REMBOURSEMENT
+   ========================================================================= */
+
+.refund-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 30px 32px;
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(168, 255, 0, 0.05), rgba(10, 17, 13, 0.94));
+}
+
+.refund-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.refund-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.refund-field > span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.refund-field > span b {
+  color: var(--coral);
+}
+
+.refund-field input,
+.refund-field textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: #070e09;
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+}
+
+.refund-field textarea {
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.refund-field input:focus,
+.refund-field textarea:focus {
+  border-color: var(--green);
+  outline: none;
+}
+
+.refund-field small {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--muted-dark);
+}
+
+.refund-file input[type='file'] {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.refund-file-name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--emerald);
+}
+
+.refund-submit {
+  align-self: flex-start;
+  min-width: 250px;
+}
+
+.refund-sent {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  padding: 32px;
+  border: 1px solid rgba(16, 232, 107, 0.35);
+  border-radius: 16px;
+  background: linear-gradient(150deg, rgba(16, 232, 107, 0.08), rgba(10, 17, 13, 0.94));
+}
+
+.refund-sent-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid var(--emerald);
+  color: var(--emerald);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.refund-sent h2 {
+  margin: 0 0 10px;
+  font-size: 22px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.refund-sent p {
+  max-width: 68ch;
+  margin: 0 0 18px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+/* =========================================================================
+   CONSOLE D'ADMINISTRATION
+   ========================================================================= */
+
+.admin-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 72px;
+}
+
+.admin-counters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.admin-counters article {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+}
+
+.admin-counters article.is-alert {
+  border-color: rgba(255, 176, 32, 0.45);
+  background: rgba(255, 176, 32, 0.09);
+}
+
+.admin-counters span {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+}
+
+.admin-counters strong {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.admin-counters .is-alert strong {
+  color: #ffb020;
+}
+
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 4px;
+}
+
+.admin-tabs button {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-tabs button:hover {
+  color: var(--white);
+  border-color: var(--white);
+}
+
+.admin-tabs button.is-active {
+  border-color: var(--green);
+  background: var(--green);
+  color: #050a02;
+}
+
+/* Liste des tickets */
+.admin-tickets {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-ticket {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line-strong);
+  border-radius: 0 12px 12px 0;
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.admin-ticket.is-pending {
+  border-left-color: #ffb020;
+}
+
+.admin-ticket.is-approved {
+  border-left-color: var(--telegram-bright);
+}
+
+.admin-ticket.is-paid {
+  border-left-color: var(--emerald);
+}
+
+.admin-ticket.is-rejected {
+  border-left-color: var(--coral);
+  opacity: 0.75;
+}
+
+.admin-ticket > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.admin-kind,
+.admin-status {
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.admin-kind {
+  border: 1px solid var(--panel-border);
+  background: var(--green-subtle);
+  color: var(--green);
+}
+
+.admin-kind.is-celsius_refund {
+  border-color: rgba(34, 158, 217, 0.4);
+  background: var(--telegram-subtle);
+  color: var(--telegram-bright);
+}
+
+.admin-kind.is-bonusbuy {
+  border-color: rgba(255, 176, 32, 0.4);
+  background: rgba(255, 176, 32, 0.12);
+  color: #ffb020;
+}
+
+.admin-status {
+  border: 1px solid var(--line-strong);
+  color: var(--muted);
+}
+
+.admin-status.is-pending {
+  border-color: rgba(255, 176, 32, 0.45);
+  color: #ffb020;
+}
+
+.admin-status.is-paid {
+  border-color: rgba(16, 232, 107, 0.45);
+  color: var(--emerald);
+}
+
+.admin-status.is-rejected {
+  border-color: rgba(255, 59, 86, 0.45);
+  color: var(--coral);
+}
+
+.admin-date {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+}
+
+.admin-ticket-body {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 1.4fr;
+  gap: 22px;
+  padding: 20px;
+}
+
+.admin-member {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-member strong {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.admin-member small {
+  font-size: 12px;
+  color: var(--muted);
+  word-break: break-word;
+}
+
+.admin-cost {
+  margin-top: 6px;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--coral-subtle);
+  border: 1px solid rgba(255, 59, 86, 0.3);
+  color: #ffb3bf;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.admin-payload {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.admin-detail {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.admin-detail p {
+  margin: 0 0 3px;
+}
+
+.admin-detail strong {
+  color: var(--white);
+}
+
+.admin-detail span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+}
+
+.admin-detail-note {
+  padding: 10px 14px;
+  border-left: 2px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.admin-proof-btn {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--telegram);
+  border-radius: 6px;
+  background: var(--telegram-subtle);
+  color: var(--telegram-bright);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-proof-btn:hover {
+  background: var(--telegram);
+  color: #ffffff;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.admin-actions input {
+  flex: 1 1 200px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  background: #070e09;
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+
+.admin-action {
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: 6px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-action:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+.admin-action.is-approve:hover:not(:disabled) {
+  border-color: var(--telegram-bright);
+  background: var(--telegram-subtle);
+  color: var(--telegram-bright);
+}
+
+.admin-action.is-paid:hover:not(:disabled) {
+  border-color: var(--emerald);
+  background: var(--emerald-subtle);
+  color: var(--emerald);
+}
+
+.admin-action.is-reject:hover:not(:disabled) {
+  border-color: var(--coral);
+  background: var(--coral-subtle);
+  color: var(--coral);
+}
+
+.admin-muted {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-dark);
+}
+
+.admin-empty {
+  padding: 44px 24px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 12px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.admin-table tbody th {
+  width: auto;
+}
+
+.admin-table td,
+.admin-table th {
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .admin-ticket-body {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .refund-form {
+    padding: 20px;
+  }
+
+  .refund-submit {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .refund-sent {
+    flex-direction: column;
+    gap: 16px;
+    padding: 22px;
+  }
+
+  .admin-date {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .admin-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-action {
+    width: 100%;
+  }
+}

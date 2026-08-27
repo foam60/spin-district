@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageShell from '../components/PageShell';
-import { ArrowIcon, DiscordIcon, RumbleIcon } from '../components/BrandIcons';
+import { ArrowIcon, RumbleIcon } from '../components/BrandIcons';
+import ShopRequestButton from '../components/ShopRequestButton';
 import { links, siteUrl } from '../lib/site';
 import {
   BONUS_BUYS,
@@ -164,14 +165,11 @@ export default async function BoutiquePage() {
                 )}
 
                 {affordable ? (
-                  <a
-                    className="button button-primary giftcard-cta"
-                    href={links.discord}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <DiscordIcon size={15} /> Demander l’échange <ArrowIcon />
-                  </a>
+                  <ShopRequestButton
+                    kind="giftcard"
+                    usdt={card.usdt}
+                    label="Demander l’échange"
+                  />
                 ) : (
                   <span className="giftcard-cta is-disabled" aria-disabled="true">
                     {canRedeem ? 'Solde insuffisant' : 'Connexion requise'}
@@ -238,14 +236,7 @@ export default async function BoutiquePage() {
                 )}
 
                 {affordable ? (
-                  <a
-                    className="button button-primary giftcard-cta"
-                    href={links.discord}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <DiscordIcon size={15} /> Réserver le bonus <ArrowIcon />
-                  </a>
+                  <ShopRequestButton kind="bonusbuy" slug={item.slug} label="Réserver le bonus" />
                 ) : (
                   <span className="giftcard-cta is-disabled" aria-disabled="true">
                     {canRedeem ? 'Solde insuffisant' : 'Connexion requise'}
@@ -264,8 +255,8 @@ export default async function BoutiquePage() {
               <h3>TU RÉSERVES</h3>
             </div>
             <p>
-              Ouvre un ticket Discord avec la slot, le montant et ton pseudo Rumble. Les points sont
-              débités à la validation de la réservation.
+              Un clic sur « Réserver le bonus » enregistre la réservation et immobilise les points.
+              En cas de refus ou de slot indisponible, ils te sont rendus.
             </p>
           </article>
           <article>
@@ -317,11 +308,11 @@ export default async function BoutiquePage() {
           <article>
             <div className="howto-header">
               <span className="step-num">01</span>
-              <h3>OUVRE UN TICKET</h3>
+              <h3>TU ENVOIES LA DEMANDE</h3>
             </div>
             <p>
-              Clique sur « Demander l’échange » : tu arrives sur le Discord. Ouvre un ticket dans le
-              salon dédié en indiquant le palier voulu et ton pseudo Rumble.
+              Un clic sur « Demander l’échange » enregistre ta demande et immobilise les points
+              correspondants. Rien à écrire, rien à recopier.
             </p>
           </article>
           <article>
@@ -330,8 +321,8 @@ export default async function BoutiquePage() {
               <h3>ON VÉRIFIE LE SOLDE</h3>
             </div>
             <p>
-              L’équipe contrôle que le solde correspond bien au palier demandé, puis débite les
-              points du compte lié.
+              La demande apparaît dans la console d’administration avec ton pseudo et ton solde. Si
+              elle est refusée, les points immobilisés te sont automatiquement rendus.
             </p>
           </article>
           <article>

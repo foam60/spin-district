@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ArrowIcon, DiscordIcon, TelegramIcon } from './BrandIcons';
 import HeaderAccountButton from './HeaderAccountButton';
+import HeaderAdminLink from './HeaderAdminLink';
 
 type NavItem = {
   label: string;
@@ -162,6 +163,8 @@ export default function SiteHeader({
           <span>Discord</span>
         </a>
 
+        <HeaderAdminLink />
+
         <HeaderAccountButton />
 
         <button
@@ -225,8 +228,11 @@ export default function SiteHeader({
               <Link href="/#faq" onClick={close}>
                 <span>08</span> FAQ &amp; Guides <ArrowIcon />
               </Link>
+              <Link href="/remboursement-celsius" onClick={close}>
+                <span>09</span> Remboursement Celsius <ArrowIcon />
+              </Link>
               <Link href="/compte" onClick={close} className="highlight">
-                <span>09</span> Mon compte &amp; points <ArrowIcon />
+                <span>10</span> Mon compte &amp; points <ArrowIcon />
               </Link>
               <a
                 href={telegramUrl}

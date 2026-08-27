@@ -44,6 +44,7 @@ export default function SiteFooter() {
           <Link href="/boutique">Boutique &amp; points</Link>
           <Link href="/blackjack">Blackjack à points</Link>
           <Link href="/#faq">FAQ &amp; Guides</Link>
+          <Link href="/remboursement-celsius">Remboursement Celsius</Link>
           <Link href="/jeu-responsable">Jeu responsable &amp; 18+</Link>
         </div>
       </div>
