@@ -11,15 +11,20 @@ type LinkCodeResponse = { code: string; expiresAt: string; error?: never };
 type LinkCodeError = { error: string; code?: never; expiresAt?: never };
 
 /** Bouton de connexion Discord (état déconnecté). */
-export function DiscordSignIn({ next = '/compte' }: { next?: string }) {
+export function DiscordSignIn() {
   const [pending, setPending] = useState(false);
 
   const signIn = async () => {
     setPending(true);
     const supabase = createClient();
+    // Aucune query string ici : Supabase compare l'URL de redirection à sa
+    // liste blanche en incluant les paramètres. Un `?next=…` ne matcherait
+    // pas une entrée `.../auth/callback` et Supabase retomberait
+    // silencieusement sur le Site URL (l'utilisateur atterrit sur l'accueil,
+    // non connecté).
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'discord',
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}` },
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
     if (error) setPending(false);
   };
