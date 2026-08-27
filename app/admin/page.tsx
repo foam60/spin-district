@@ -67,6 +67,11 @@ export default async function AdminPage() {
             afficher « OK ». Si l’une indique « A CORRIGER », la requête à exécuter est en
             commentaire à la fin du fichier.
           </p>
+          <p>
+            Si une fonction reste « introuvable » alors que les scripts sont passés, c’est le cache
+            de schéma de PostgREST : <code>notify pgrst, &apos;reload schema&apos;;</code> (les
+            scripts le font désormais en dernière ligne).
+          </p>
           <Link className="button button-ghost" href="/compte">
             Retour à mon compte <ArrowIcon />
           </Link>

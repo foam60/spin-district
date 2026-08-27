@@ -57,7 +57,7 @@ export default function HeaderAccountButton({ onNavigate }: { onNavigate?: () =>
         title="Se connecter à son espace membre"
       >
         <UserIcon size={15} />
-        <span>Connexion</span>
+        <span className="header-account-label">Connexion</span>
       </Link>
     );
   }

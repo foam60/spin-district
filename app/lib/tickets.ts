@@ -79,7 +79,7 @@ export const PROOF_MAX_BYTES = 5 * 1024 * 1024;
 export const PROOF_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'application/pdf'];
 
 export const SETUP_HINT =
-  'Le système de tickets n’est pas encore installé côté base de données. Exécutez supabase/00-mapping.sql, puis blackjack.sql, puis tickets.sql.';
+  "Fonction introuvable côté base. Deux causes possibles : les scripts SQL n’ont pas été exécutés (supabase/00-mapping.sql, puis blackjack.sql, puis tickets.sql), ou le cache de schéma PostgREST n’a pas été rechargé — dans ce cas lancez : notify pgrst, 'reload schema';";
 
 export const MAPPING_HINT =
   'Les colonnes de chat_users / account_links n’ont pas été reconnues. Le panneau de diagnostic de /admin indique quel nom ajouter dans supabase/00-mapping.sql.';

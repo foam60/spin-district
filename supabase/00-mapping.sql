@@ -35,7 +35,19 @@ as $$
   limit 1;
 $$;
 
-/** Colonne d'`account_links` qui porte l'identifiant auth de l'utilisateur. */
+-- ---------------------------------------------------------------------
+-- Détection PAR TYPE, et non par nom
+-- ---------------------------------------------------------------------
+-- Première version : on cherchait des noms connus, avec 'id' en dernier
+-- recours. Sur une table où la colonne auth s'appelle autrement, la détection
+-- retombait sur `id` (bigint) d'où l'erreur « operator does not exist:
+-- bigint = uuid ».
+--
+-- Le lien vers auth.users est FORCÉMENT de type uuid : on filtre donc sur le
+-- type, et le nom ne sert plus qu'à départager plusieurs candidats. Aucune
+-- colonne bigint ne peut plus être choisie.
+
+/** Colonne uuid d'`account_links` qui porte l'identifiant auth. */
 create or replace function public.sd_link_user_column()
 returns text
 language sql
@@ -43,17 +55,21 @@ stable
 security definer
 set search_path = public
 as $$
-  select public.sd_detect_column(
-    'account_links',
-    array[
-      'user_id', 'auth_user_id', 'supabase_user_id', 'supabase_uid', 'auth_uid', 'auth_id',
-      'uid', 'discord_user_id', 'sb_user_id', 'owner_id', 'member_id', 'profile_id',
-      'account_id', 'id'
-    ]
-  );
+  select c.column_name::text
+  from information_schema.columns c
+  where c.table_schema = 'public'
+    and c.table_name::text = 'account_links'
+    and (c.data_type = 'uuid' or c.udt_name = 'uuid')
+  order by
+    case
+      when c.column_name::text ~* '(user|auth|owner|member|profile|account)' then 0
+      else 1
+    end,
+    c.ordinal_position
+  limit 1;
 $$;
 
-/** Colonne d'`account_links` qui porte le pseudo Rumble. */
+/** Colonne texte d'`account_links` qui porte le pseudo Rumble. */
 create or replace function public.sd_link_name_column()
 returns text
 language sql
@@ -61,16 +77,23 @@ stable
 security definer
 set search_path = public
 as $$
-  select public.sd_detect_column(
-    'account_links',
-    array[
-      'rumble_username', 'username', 'rumble_user', 'rumble_name', 'chat_username',
-      'rumble_pseudo', 'pseudo', 'login'
-    ]
-  );
+  select c.column_name::text
+  from information_schema.columns c
+  where c.table_schema = 'public'
+    and c.table_name::text = 'account_links'
+    and (c.data_type in ('text', 'character varying', 'character') or c.udt_name = 'citext')
+  order by
+    case
+      when c.column_name::text ~* 'rumble' then 0
+      when c.column_name::text ~* '(username|pseudo|login)' then 1
+      when c.column_name::text ~* 'name' then 2
+      else 3
+    end,
+    c.ordinal_position
+  limit 1;
 $$;
 
-/** Colonne de `chat_users` qui identifie un spectateur par son pseudo. */
+/** Colonne texte de `chat_users` qui identifie un spectateur. */
 create or replace function public.sd_chat_name_column()
 returns text
 language sql
@@ -78,13 +101,23 @@ stable
 security definer
 set search_path = public
 as $$
-  select public.sd_detect_column(
-    'chat_users',
-    array['username', 'rumble_username', 'name', 'login', 'display_name']
-  );
+  select c.column_name::text
+  from information_schema.columns c
+  where c.table_schema = 'public'
+    and c.table_name::text = 'chat_users'
+    and (c.data_type in ('text', 'character varying', 'character') or c.udt_name = 'citext')
+  order by
+    case
+      when c.column_name::text ~* '(username|rumble)' then 0
+      when c.column_name::text ~* '(pseudo|login)' then 1
+      when c.column_name::text ~* 'name' then 2
+      else 3
+    end,
+    c.ordinal_position
+  limit 1;
 $$;
 
-/** Colonne de points de `chat_users`. */
+/** Colonne numérique de points de `chat_users`. */
 create or replace function public.sd_chat_points_column()
 returns text
 language sql
@@ -92,10 +125,20 @@ stable
 security definer
 set search_path = public
 as $$
-  select public.sd_detect_column(
-    'chat_users',
-    array['points', 'balance', 'point_balance', 'score']
-  );
+  select c.column_name::text
+  from information_schema.columns c
+  where c.table_schema = 'public'
+    and c.table_name::text = 'chat_users'
+    and c.data_type in ('integer', 'bigint', 'smallint', 'numeric', 'double precision', 'real')
+  order by
+    case
+      when c.column_name::text ~* '^points?$' then 0
+      when c.column_name::text ~* '(point|balance|solde)' then 1
+      when c.column_name::text ~* 'score' then 2
+      else 3
+    end,
+    c.ordinal_position
+  limit 1;
 $$;
 
 -- ---------------------------------------------------------------------
@@ -375,7 +418,11 @@ stable
 security definer
 set search_path = public
 as $$
-  select c.table_name::text, string_agg(c.column_name::text, ', ' order by c.ordinal_position)
+  select c.table_name::text,
+         string_agg(
+           c.column_name::text || ' (' || coalesce(nullif(c.udt_name::text, ''), c.data_type) || ')',
+           ', ' order by c.ordinal_position
+         )
   from information_schema.columns c
   where c.table_schema = 'public'
     and c.table_name::text in ('account_links', 'chat_users')
@@ -410,3 +457,11 @@ grant execute on function public.sd_selftest() to authenticated;
 grant execute on function public.sd_columns_report() to authenticated;
 -- sd_adjust_points n'est jamais appelée depuis l'application : uniquement
 -- depuis les fonctions security definer du blackjack et des tickets.
+
+-- ---------------------------------------------------------------------
+-- 8. Rechargement du cache de schéma PostgREST
+-- ---------------------------------------------------------------------
+-- Indispensable : une fonction créée à l'instant n'est pas visible par
+-- l'API tant que PostgREST n'a pas rechargé son cache. C'est ce qui
+-- provoque « Could not find the function … in the schema cache ».
+notify pgrst, 'reload schema';

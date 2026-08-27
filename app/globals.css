@@ -7060,3 +7060,111 @@ article[id] {
   padding-left: 20px;
   word-break: break-word;
 }
+
+/* =========================================================================
+   CORRECTIFS MOBILE — HEADER & TIROIR DE NAVIGATION
+   ========================================================================= */
+
+/* Le resserrement des espacements ne concerne que les largeurs intermédiaires.
+   Sans la borne min-width, cette règle écrasait le `gap: 12px` du palier 640px
+   (elle est déclarée plus loin dans la feuille) et le header débordait. */
+@media (max-width: 1240px) and (min-width: 641px) {
+  .site-header {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-header {
+    gap: 10px;
+  }
+
+  /* Trois CTA + le burger ne tiennent pas sous 640px : Telegram reste
+     accessible dans le tiroir, la section Communauté et le footer. */
+  .header-telegram-cta {
+    display: none;
+  }
+
+  /* Bouton compte réduit à son icône (ou à l'avatar une fois connecté). */
+  .header-account-cta {
+    padding: 0 11px;
+  }
+
+  .header-account-label {
+    display: none;
+  }
+
+  .header-admin-cta {
+    padding: 0 10px;
+    gap: 5px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 380px) {
+  /* Très petits écrans : on ne garde que le logo, l'accès compte et le burger. */
+  .brand-text small {
+    display: none;
+  }
+
+  .header-admin-label {
+    display: none;
+  }
+}
+
+/* Le tiroir contient une dizaine d'entrées : sur un écran court, le bas
+   (dont « Mon compte » et le bouton Discord) devenait inatteignable. */
+.mobile-nav {
+  max-height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Un tiroir dont la position de repos dépend d'une animation peut rester hors
+   écran si celle-ci ne s'exécute pas (onglet en arrière-plan, économie
+   d'énergie, mouvement réduit). On neutralise l'animation dans ce cas. */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Le bloc d'actions occupe une piste `1fr` : sans cet alignement, une fois les
+   CTA masqués en mobile, l'icône compte et le burger flottaient au milieu de
+   la piste au lieu d'être collés au bord droit. */
+.header-end {
+  justify-content: flex-end;
+}
+
+/* =========================================================================
+   CORRECTIF MOBILE — LARGEUR DU HUNT LAB
+   ========================================================================= */
+
+/* Le tableau des slots impose `min-width: 760px`. En desktop la grille du
+   Hunt Lab protège la piste avec `minmax(0, 1fr)` ; la surcharge mobile
+   repassait à `1fr` tout court, dont le minimum implicite est `auto` : la
+   piste s'élargissait donc à 816 px dans un écran de 375, et tout le côté
+   droit (métriques, bouton « Ajouter une slot ») était rogné sans scroll par
+   le `overflow-x: hidden` du body.
+   Avec `minmax(0, …)` + `min-width: 0`, la colonne peut rétrécir et c'est le
+   conteneur interne du tableau (déjà en `overflow-x: auto`) qui défile. */
+@media (max-width: 992px) {
+  .hunt-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.hunt-app,
+.hunt-library {
+  min-width: 0;
+}
+
+/* Cible tactile du bouton de fermeture du tiroir portée à 44 px. */
+@media (max-width: 640px) {
+  .mobile-close-btn {
+    width: 44px;
+    height: 44px;
+  }
+}

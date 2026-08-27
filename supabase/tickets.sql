@@ -368,3 +368,10 @@ grant execute on function public.admin_resolve_ticket(uuid, text, text) to authe
 grant execute on function public.admin_list_tickets(text) to authenticated;
 grant execute on function public.admin_ticket_counts() to authenticated;
 grant execute on function public.admin_list_members() to authenticated;
+
+-- ---------------------------------------------------------------------
+-- Rechargement du cache de schéma PostgREST
+-- ---------------------------------------------------------------------
+-- Sans ce NOTIFY, les fonctions créées ci-dessus restent invisibles pour
+-- l'API REST : les appels échouent en « Could not find the function ».
+notify pgrst, 'reload schema';

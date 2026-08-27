@@ -172,3 +172,10 @@ revoke all on function public.blackjack_settle_round(uuid, jsonb, integer, text,
 grant execute on function public.blackjack_open_round(integer, jsonb) to authenticated;
 grant execute on function public.blackjack_update_round(uuid, jsonb) to authenticated;
 grant execute on function public.blackjack_settle_round(uuid, jsonb, integer, text, integer) to authenticated;
+
+-- ---------------------------------------------------------------------
+-- Rechargement du cache de schéma PostgREST
+-- ---------------------------------------------------------------------
+-- Sans ce NOTIFY, les fonctions créées ci-dessus restent invisibles pour
+-- l'API REST : les appels échouent en « Could not find the function ».
+notify pgrst, 'reload schema';

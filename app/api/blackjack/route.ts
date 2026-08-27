@@ -33,7 +33,7 @@ const PG_ERRORS: Record<string, string> = {
 };
 
 const SETUP_HINT =
-  'Le blackjack n’est pas encore installé côté base de données. Exécutez supabase/00-mapping.sql, puis blackjack.sql, puis tickets.sql.';
+  "Fonction introuvable côté base. Deux causes possibles : les scripts SQL n’ont pas été exécutés (supabase/00-mapping.sql, puis blackjack.sql, puis tickets.sql), ou le cache de schéma PostgREST n’a pas été rechargé — dans ce cas lancez : notify pgrst, 'reload schema';";
 
 function fail(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });

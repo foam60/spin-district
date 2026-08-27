@@ -49,7 +49,7 @@ export default function HeaderAdminLink({ onNavigate }: { onNavigate?: () => voi
 
   return (
     <Link className="header-admin-cta" href="/admin" onClick={onNavigate} title="Console d’administration">
-      <span>Admin</span>
+      <span className="header-admin-label">Admin</span>
       {pending > 0 && (
         <span className="header-admin-badge" aria-label={`${pending} demandes en attente`}>
           {pending}
