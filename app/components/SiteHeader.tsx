@@ -15,6 +15,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Lives', href: '/#live', anchor: 'live' },
   { label: 'Communauté', href: '/#communaute', anchor: 'communaute' },
   { label: 'FAQ', href: '/#faq', anchor: 'faq' },
+  { label: 'Mon compte', href: '/compte' },
 ];
 
 const SPY_SECTIONS = ['offre', 'bonus-hunt', 'live', 'communaute', 'faq'];
@@ -225,6 +226,9 @@ export default function SiteHeader({
               </Link>
               <Link href="/#faq" onClick={close}>
                 <span>06</span> FAQ &amp; Guides <ArrowIcon />
+              </Link>
+              <Link href="/compte" onClick={close}>
+                <span>07</span> Mon compte &amp; points <ArrowIcon />
               </Link>
               <a
                 href={telegramUrl}
