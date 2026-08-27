@@ -4,8 +4,9 @@
 -- À exécuter dans l'éditeur SQL Supabase. Sans ces objets, les pages
 -- s'affichent mais expliquent que le système n'est pas encore installé.
 --
--- Dépend de `blackjack_points_row()` (voir supabase/blackjack.sql) pour
--- localiser le portefeuille de points de l'utilisateur connecté.
+-- Prérequis : supabase/00-mapping.sql. Ce fichier ne touche jamais
+-- `chat_users` ni `account_links` directement : tout passe par
+-- sd_adjust_points() / sd_points_balance() / sd_rumble_username().
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
@@ -99,7 +100,6 @@ security definer
 set search_path = public
 as $$
 declare
-  v_row     bigint;
   v_balance integer;
   v_ticket  uuid;
 begin
@@ -120,23 +120,9 @@ begin
     raise exception 'ticket_already_pending';
   end if;
 
-  v_row := public.blackjack_points_row();
-  if v_row is null then
-    raise exception 'no_points_account';
-  end if;
-
   -- Les points sont retirés dès la demande : sans ça, le même solde pourrait
   -- financer plusieurs tickets en attente.
-  update public.chat_users
-     set points = points - p_points,
-         updated_at = now()
-   where id = v_row
-     and points >= p_points
-  returning points into v_balance;
-
-  if v_balance is null then
-    raise exception 'insufficient_points';
-  end if;
+  v_balance := public.sd_adjust_points(auth.uid(), -p_points);
 
   insert into public.tickets (user_id, kind, points_cost, payload)
   values (auth.uid(), p_kind, p_points, coalesce(p_payload, '{}'::jsonb))
@@ -199,7 +185,6 @@ set search_path = public
 as $$
 declare
   v_ticket public.tickets;
-  v_row    bigint;
 begin
   if not public.is_admin() then
     raise exception 'not_admin';
@@ -220,21 +205,14 @@ begin
     raise exception 'ticket_already_resolved';
   end if;
 
-  -- Restitution des points sur refus, une seule fois.
+  -- Restitution des points sur refus, une seule fois. Un membre qui aurait
+  -- entre-temps délié son pseudo ne doit pas bloquer le traitement du ticket.
   if p_status = 'rejected' and v_ticket.points_cost > 0 and v_ticket.status = 'pending' then
-    v_row := (
-      select cu.id
-      from public.chat_users cu
-      join public.account_links al on al.rumble_username = cu.username
-      where al.user_id = v_ticket.user_id
-      limit 1
-    );
-    if v_row is not null then
-      update public.chat_users
-         set points = points + v_ticket.points_cost,
-             updated_at = now()
-       where id = v_row;
-    end if;
+    begin
+      perform public.sd_adjust_points(v_ticket.user_id, v_ticket.points_cost);
+    exception when others then
+      null;
+    end;
   end if;
 
   update public.tickets
@@ -286,12 +264,10 @@ as $$
       u.raw_user_meta_data ->> 'full_name',
       u.raw_user_meta_data ->> 'name'
     ) as discord_name,
-    al.rumble_username,
-    cu.points
+    public.sd_rumble_username(t.user_id),
+    public.sd_points_balance(t.user_id)
   from public.tickets t
   join auth.users u on u.id = t.user_id
-  left join public.account_links al on al.user_id = t.user_id
-  left join public.chat_users cu on cu.username = al.rumble_username
   where public.is_admin()
     and (p_status is null or t.status = p_status)
   order by t.created_at desc
@@ -335,13 +311,11 @@ as $$
       u.raw_user_meta_data ->> 'full_name',
       u.raw_user_meta_data ->> 'name'
     ) as discord_name,
-    al.rumble_username,
-    cu.points,
-    al.linked_at,
+    public.sd_rumble_username(u.id),
+    public.sd_points_balance(u.id),
+    null::timestamptz as linked_at,
     u.created_at
   from auth.users u
-  left join public.account_links al on al.user_id = u.id
-  left join public.chat_users cu on cu.username = al.rumble_username
   where public.is_admin()
   order by u.created_at desc
   limit 500;

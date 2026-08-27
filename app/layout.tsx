@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 import { JetBrains_Mono, Outfit } from 'next/font/google';
 import './globals.css';
 import { casinos, links, siteUrl } from './lib/site';
@@ -165,7 +166,11 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* Mesure d'audience Vercel : ne collecte que sur un déploiement Vercel. */}
+        <Analytics />
+      </body>
     </html>
   );
 }

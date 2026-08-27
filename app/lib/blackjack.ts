@@ -40,14 +40,14 @@ export type RoundState = {
 
 export const DECKS = 6;
 /**
- * Bornes de mise, alignées sur le taux de la boutique (POINTS_PER_USDT) :
- * elles ont été multipliées par 5 en même temps que le coût des cartes
- * cadeaux, pour que l'enjeu relatif d'une manche reste le même.
+ * Bornes de mise. Le plafond suit le taux de la boutique
+ * (POINTS_PER_USDT) ; le plancher est volontairement bas pour qu'un petit
+ * solde puisse jouer plusieurs manches.
  */
-export const MIN_BET = 250;
+export const MIN_BET = 100;
 export const MAX_BET = 25000;
 /** Paliers proposés dans l'interface. */
-export const BET_STEPS = [250, 500, 1000, 2500, 5000, 10000] as const;
+export const BET_STEPS = [100, 250, 500, 1000, 2500, 10000] as const;
 
 const SUITS: Suit[] = ['S', 'H', 'D', 'C'];
 const RANKS: Rank[] = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];

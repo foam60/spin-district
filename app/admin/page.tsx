@@ -48,16 +48,27 @@ export default async function AdminPage() {
         crumbs={[{ name: 'Administration', path: '/admin' }]}
       >
         <section className="page-section prose alert-box">
-          <h2>Deux scripts à exécuter</h2>
+          <h2>Trois scripts à exécuter, dans cet ordre</h2>
+          <ol>
+            <li>
+              <code>supabase/00-mapping.sql</code> — détecte les colonnes réelles de{' '}
+              <code>account_links</code> et <code>chat_users</code> et expose le point d’écriture
+              unique des points.
+            </li>
+            <li>
+              <code>supabase/blackjack.sql</code> — table des manches et règlement.
+            </li>
+            <li>
+              <code>supabase/tickets.sql</code> — tickets, bucket privé des preuves de dépôt et
+              whitelist d’administrateurs (déjà initialisée avec{' '}
+              <strong>{ADMIN_FALLBACK_EMAIL}</strong>).
+            </li>
+          </ol>
           <p>
-            Dans l’éditeur SQL Supabase, dans cet ordre :{' '}
-            <code>supabase/blackjack.sql</code> puis <code>supabase/tickets.sql</code>. Le second
-            crée la table des tickets, le bucket privé des preuves de dépôt et la whitelist
-            d’administrateurs (déjà initialisée avec <strong>{ADMIN_FALLBACK_EMAIL}</strong>).
-          </p>
-          <p>
-            Vérifiez aussi la fonction <code>blackjack_points_row()</code> en tête du premier
-            script : c’est elle qui relie un compte Discord à sa ligne de points.
+            Juste après le premier script, lancez{' '}
+            <code>select * from public.sd_mapping_report();</code> : les quatre lignes doivent
+            afficher « OK ». Si l’une indique « A CORRIGER », la requête à exécuter est en
+            commentaire à la fin du fichier.
           </p>
           <Link className="button button-ghost" href="/compte">
             Retour à mon compte <ArrowIcon />
