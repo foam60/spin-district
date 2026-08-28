@@ -40,14 +40,15 @@ export type RoundState = {
 
 export const DECKS = 6;
 /**
- * Bornes de mise. Le plafond suit le taux de la boutique
- * (POINTS_PER_USDT) ; le plancher est volontairement bas pour qu'un petit
- * solde puisse jouer plusieurs manches.
+ * Bornes de mise, volontairement basses : à 1 000 points maximum (soit 0,20
+ * USDT au taux de la boutique), une mauvaise série au blackjack ne peut plus
+ * effacer des heures de live. Le plafond est validé côté serveur par
+ * `normalizeBet`, pas seulement dans l'interface.
  */
 export const MIN_BET = 100;
-export const MAX_BET = 25000;
+export const MAX_BET = 1000;
 /** Paliers proposés dans l'interface. */
-export const BET_STEPS = [100, 250, 500, 1000, 2500, 10000] as const;
+export const BET_STEPS = [100, 200, 300, 500, 750, 1000] as const;
 
 const SUITS: Suit[] = ['S', 'H', 'D', 'C'];
 const RANKS: Rank[] = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];

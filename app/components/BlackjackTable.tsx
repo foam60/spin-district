@@ -209,6 +209,14 @@ export default function BlackjackTable({
   const inHand = round?.status === 'player';
   const busy = pending !== null;
   const maxBet = Math.min(MAX_BET, balance);
+  const betIssue =
+    bet < MIN_BET
+      ? `Mise minimum : ${formatPoints(MIN_BET)} points.`
+      : bet > MAX_BET
+        ? `Mise maximum : ${formatPoints(MAX_BET)} points.`
+        : bet > balance
+          ? 'Solde insuffisant pour cette mise.'
+          : null;
 
   return (
     <div className="bj-table">
@@ -351,11 +359,17 @@ export default function BlackjackTable({
             type="button"
             className="button button-primary bj-deal"
             onClick={deal}
-            disabled={busy || bet < MIN_BET || bet > maxBet}
+            disabled={busy || betIssue !== null}
           >
             {pending === 'deal' ? 'Distribution…' : finished ? 'Rejouer' : 'Distribuer'}{' '}
             <ArrowIcon />
           </button>
+
+          {betIssue && (
+            <p className="bj-bet-issue" role="status">
+              {betIssue}
+            </p>
+          )}
 
           <p className="bj-bet-hint">
             Mise entre {formatPoints(MIN_BET)} et {formatPoints(MAX_BET)} points. La mise est

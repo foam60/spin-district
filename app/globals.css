@@ -7313,3 +7313,14 @@ article[id] {
     grid-column: 1 / -1;
   }
 }
+
+/* Raison affichée quand « Distribuer » est grisé (mise hors bornes). */
+.bj-bet-issue {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffb020;
+}
