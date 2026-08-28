@@ -18,16 +18,13 @@ export default function SiteFooter() {
 
       <div className="footer-legal">
         <p>
-          <strong>Jeu responsable &amp; transparence :</strong> Spin District est un site
-          indépendant d’information et d’outils pour les passionnés de machines à sous. Les liens
-          vers Celsius Casino et Stake sont des <strong>liens d’affiliation</strong> : nous pouvons
-          percevoir une commission si vous créez un compte, sans surcoût pour vous et sans influence
-          sur nos contenus. Les jeux d’argent sont strictement interdits aux mineurs (18+) et ces
-          opérateurs ne détiennent pas d’agrément ANJ en France.
+          <strong>18+</strong> • Liens d’affiliation • Celsius et Stake n’ont pas d’agrément ANJ en
+          France. Jouer comporte des risques.{' '}
+          <Link href="/jeu-responsable">Le détail ↗</Link>
         </p>
         <p className="helpline">
-          Besoin d’aide ? Appelez <strong>Joueurs Info Service</strong> au{' '}
-          <a href="tel:0974751313">09 74 75 13 13</a> (appel non surtaxé, 8h-2h, 7j/7) ou consultez{' '}
+          Besoin d’aide ? <strong>Joueurs Info Service</strong> —{' '}
+          <a href="tel:0974751313">09 74 75 13 13</a> (gratuit, 7j/7) ·{' '}
           <a href={links.helpline} target="_blank" rel="noopener noreferrer">
             joueurs-info-service.fr ↗
           </a>

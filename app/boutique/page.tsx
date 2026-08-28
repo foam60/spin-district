@@ -69,11 +69,8 @@ export default async function BoutiquePage() {
       intro={
         <>
           <p>
-            Deux façons de dépenser les points cumulés pendant les lives : des{' '}
-            <strong>cartes cadeaux USDT</strong> de 5 à 100, ou un{' '}
-            <strong>bonus buy acheté en direct</strong> sur la slot de votre choix — et c’est vous
-            qui encaissez le gain. Les points se gagnent uniquement en participant :{' '}
-            <strong>aucun point n’est achetable avec de l’argent</strong>.
+            Deux façons de dépenser vos points : des <strong>cartes cadeaux USDT</strong> de 5 à
+            100, ou un <strong>bonus buy acheté en live</strong> dont le gain vous revient.
           </p>
           <p className="page-hero-note">
             Taux actuel : {formatPoints(POINTS_PER_USDT)} points = 1 USDT • Réservé aux membres
@@ -125,10 +122,6 @@ export default async function BoutiquePage() {
       {/* ------------------------------ CARTES CADEAUX --------------------- */}
       <section className="page-section" id="cartes-cadeaux" aria-labelledby="cards-title">
         <h2 id="cards-title">Cartes cadeaux USDT</h2>
-        <p className="account-card-text shop-earn-intro">
-          Valeur garantie, envoyée en message privé Discord après vérification du solde.
-        </p>
-
         <div className="giftcard-grid">
           {GIFT_CARDS.map((card) => {
             const { affordable, missing, progress } = itemState(card.points);
@@ -181,9 +174,7 @@ export default async function BoutiquePage() {
         </div>
 
         <p className="shop-rate-note">
-          Taux appliqué : {formatPoints(POINTS_PER_USDT)} points pour 1 USDT. Les paliers sont
-          linéaires — épargner ne fait pas baisser le prix, mais rien n’oblige à échanger tout de
-          suite.
+          {formatPoints(POINTS_PER_USDT)} points = 1 USDT. Paliers linéaires.
         </p>
       </section>
 
@@ -191,10 +182,9 @@ export default async function BoutiquePage() {
       <section className="page-section" id="bonus-buys" aria-labelledby="bonus-title">
         <h2 id="bonus-title">Bonus buys en live</h2>
         <p className="account-card-text shop-earn-intro">
-          Vous choisissez la slot, on achète le bonus en direct sur le stream, et{' '}
-          <strong>l’intégralité du gain du bonus vous est envoyée en USDT</strong>. Moins cher au
-          dollar qu’une carte cadeau, parce que le résultat est aléatoire : un bonus peut rapporter
-          gros comme retomber sous le montant acheté.
+          Vous choisissez la slot, on l’achète en live, et{' '}
+          <strong>tout le gain vous est envoyé en USDT</strong>. Moins cher au dollar qu’une carte
+          cadeau, parce que le résultat est aléatoire.
         </p>
 
         <div className="bonusbuy-grid">
@@ -342,8 +332,7 @@ export default async function BoutiquePage() {
       <section className="page-section" id="gagner" aria-labelledby="earn-title">
         <h2 id="earn-title">Comment gagner des points</h2>
         <p className="account-card-text shop-earn-intro">
-          Les points ne s’achètent pas : ils se gagnent en étant présent et actif sur les lives.
-          Voici toutes les sources.
+          Les points ne s’achètent pas. Ils se gagnent sur les lives :
         </p>
 
         <ul className="earn-list">
@@ -375,60 +364,65 @@ export default async function BoutiquePage() {
       </section>
 
       {/* ------------------------------ CONDITIONS ------------------------- */}
-      <section className="page-section prose disclosure-box" aria-labelledby="shop-terms-title">
-        <h2 id="shop-terms-title">Conditions de la boutique</h2>
-        <ul>
-          <li>
-            Les points sont <strong>gagnés uniquement en participant</strong> aux lives et aux
-            animations de la communauté. Ils ne sont ni vendus, ni achetables avec de l’argent.
-          </li>
-          <li>
-            Les échanges sont réservés aux membres <strong>majeurs (18+)</strong> dont le pseudo
-            Rumble est lié à un compte Discord.
-          </li>
-          <li>
-            Les points n’ont pas de valeur monétaire tant qu’ils ne sont pas échangés, ne sont pas
-            transférables entre comptes et ne peuvent pas être remboursés.
-          </li>
-          <li>
-            Tout comportement visant à gonfler artificiellement un solde (multi-comptes, bots, spam
-            du chat) entraîne l’annulation des points et l’exclusion de la boutique.
-          </li>
-          <li>
-            Le taux et les paliers peuvent évoluer. Les échanges déjà validés ne sont pas
-            recalculés.
-          </li>
-          <li>
-            Selon votre pays de résidence, la réception d’USDT peut avoir des conséquences fiscales :
-            c’est à vous de vous en assurer.
-          </li>
-        </ul>
+      <section className="page-section prose disclosure-box">
+        <details className="terms-details">
+          <summary>
+            <span>Conditions de la boutique</span>
+            <span aria-hidden="true">↓</span>
+          </summary>
+          <ul>
+            <li>
+              Les points sont <strong>gagnés uniquement en participant</strong> aux lives et aux
+              animations de la communauté. Ils ne sont ni vendus, ni achetables avec de l’argent.
+            </li>
+            <li>
+              Les échanges sont réservés aux membres <strong>majeurs (18+)</strong> dont le pseudo
+              Rumble est lié à un compte Discord.
+            </li>
+            <li>
+              Les points n’ont pas de valeur monétaire tant qu’ils ne sont pas échangés, ne sont pas
+              transférables entre comptes et ne peuvent pas être remboursés.
+            </li>
+            <li>
+              Tout comportement visant à gonfler artificiellement un solde (multi-comptes, bots, spam
+              du chat) entraîne l’annulation des points et l’exclusion de la boutique.
+            </li>
+            <li>
+              Le taux et les paliers peuvent évoluer. Les échanges déjà validés ne sont pas
+              recalculés.
+            </li>
+            <li>
+              Selon votre pays de résidence, la réception d’USDT peut avoir des conséquences fiscales :
+              c’est à vous de vous en assurer.
+            </li>
+          </ul>
 
-        <h3 className="shop-subheading">Spécifique aux bonus buys</h3>
-        <ul>
-          <li>
-            Un bonus buy est acheté <strong>pendant un live</strong>. Sans stream planifié, la
-            réservation reste en file d’attente et les points ne sont débités qu’à sa validation.
-          </li>
-          <li>
-            Le gain versé est <strong>celui affiché à la fin du bonus</strong>, capture d’écran
-            fournie. Un bonus qui retombe sous le montant acheté ne donne droit à aucune
-            compensation et les points ne sont pas restitués.
-          </li>
-          <li>
-            Si la slot demandée n’est pas disponible sur le casino utilisé ce soir-là, vous choisissez
-            un autre titre du même montant, ou la réservation est annulée et les points restitués.
-          </li>
-          <li>
-            Une réservation par membre et par live tant que la file d’attente n’est pas écoulée, pour
-            que tout le monde puisse passer.
-          </li>
-        </ul>
+          <h3 className="shop-subheading">Spécifique aux bonus buys</h3>
+          <ul>
+            <li>
+              Un bonus buy est acheté <strong>pendant un live</strong>. Sans stream planifié, la
+              réservation reste en file d’attente et les points ne sont débités qu’à sa validation.
+            </li>
+            <li>
+              Le gain versé est <strong>celui affiché à la fin du bonus</strong>, capture d’écran
+              fournie. Un bonus qui retombe sous le montant acheté ne donne droit à aucune
+              compensation et les points ne sont pas restitués.
+            </li>
+            <li>
+              Si la slot demandée n’est pas disponible sur le casino utilisé ce soir-là, vous choisissez
+              un autre titre du même montant, ou la réservation est annulée et les points restitués.
+            </li>
+            <li>
+              Une réservation par membre et par live tant que la file d’attente n’est pas écoulée, pour
+              que tout le monde puisse passer.
+            </li>
+          </ul>
 
-        <p>
-          Rappel : Spin District parle de casino en ligne, activité interdite aux mineurs et à
-          risque. Consultez nos <Link href="/jeu-responsable">règles de jeu responsable</Link>.
-        </p>
+            <p>
+              Casino en ligne : interdit aux mineurs, comporte des risques.{' '}
+              <Link href="/jeu-responsable">Nos règles de jeu responsable</Link>.
+            </p>
+        </details>
       </section>
     </PageShell>
   );

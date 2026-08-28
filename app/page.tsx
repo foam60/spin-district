@@ -22,50 +22,34 @@ const homeJsonLd = {
       mainEntity: [
         {
           '@type': 'Question',
-          name: "Qu'est-ce qu'un Bonus Hunt au casino ?",
+          name: 'Qu’est-ce qu’un Bonus Hunt ?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: "Un Bonus Hunt (ou chasse aux bonus) consiste à jouer sur plusieurs machines à sous jusqu'à déclencher les tours gratuits (bonus), sans les ouvrir immédiatement. Une fois tous les bonus collectés avec une bankroll définie, le joueur ouvre tous les bonus d'affilée pour calculer le multiplicateur moyen et le gain total.",
+            text: 'Jouer sur plusieurs machines jusqu’à déclencher les tours gratuits sans les ouvrir, puis tout ouvrir d’affilée pour comparer le multiplicateur moyen au break-even.',
           },
         },
         {
           '@type': 'Question',
-          name: 'Comment fonctionne le tracker Bonus Hunt Lab de Spin District ?',
+          name: 'Le Hunt Lab est-il gratuit, et mes sessions sont-elles gardées ?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: "Le Bonus Hunt Lab est un outil 100% gratuit et sans inscription. Créez une session, sélectionnez vos slots parmi plus de 2 000 machines ou ajoutez vos titres personnalisés, indiquez la mise, puis notez les gains lors du payout. L'outil calcule automatiquement votre multiplicateur moyen, votre point d'équilibre (break-even) et vos bénéfices.",
+            text: 'Gratuit, sans inscription. Tout est enregistré dans le stockage local de votre navigateur : fermez l’onglet, vos sessions sont toujours là. Export CSV et JSON disponibles.',
           },
         },
         {
           '@type': 'Question',
-          name: 'Mes données de sessions sont-elles conservées en sécurité ?',
+          name: 'Celsius ou Stake : lequel choisir ?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Oui. Le tracker enregistre automatiquement toutes vos sessions dans le stockage local de votre navigateur (localStorage). Vos données restent strictement privées sur votre appareil et ne sont jamais transmises à des serveurs tiers. Un export CSV ou JSON permet de les archiver.',
+            text: 'Celsius pour le bonus d’entrée (premier dépôt de 20 € remboursé, jusqu’à 550 %), Stake pour la durée (Originals, rakeback, retraits crypto).',
           },
         },
         {
           '@type': 'Question',
-          name: 'Quels sont les casinos partenaires de Spin District ?',
+          name: 'Les liens vers les casinos sont-ils affiliés ?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Spin District travaille avec deux casinos : Stake, la plateforme la plus utilisée par les streamers casino (Originals maison, rakeback, programme VIP progressif et retraits crypto quasi instantanés) et Celsius Casino, qui propose le package de bienvenue le plus généreux (premier dépôt de 20 € remboursé et jusqu’à 550 % de bonus). Les deux liens sont des liens d’affiliation et ces opérateurs ne détiennent pas d’agrément ANJ en France.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'Comment rejoindre le canal Telegram officiel Spin District ?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Vous pouvez rejoindre le canal Telegram officiel via le bouton Telegram dans la barre de navigation ou via les liens dédiés du site pour recevoir les alertes de live, les annonces exclusives et les giveaways de la communauté.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'Les liens vers les casinos sont-ils des liens d’affiliation ?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Oui. Les liens vers Stake et Celsius Casino sont des liens partenaires : Spin District peut percevoir une commission si vous créez un compte, sans surcoût pour vous. Ce financement permet de maintenir le tracker gratuit et les animations de la communauté.',
+            text: 'Oui. Nous pouvons percevoir une commission si vous créez un compte, sans surcoût pour vous. Ces opérateurs n’ont pas d’agrément ANJ en France.',
           },
         },
       ],
@@ -99,9 +83,8 @@ export default function Home() {
           </h1>
 
           <p className="hero-intro">
-            Lives casino immersifs, chasses aux bonus trackées en temps réel et challenges réguliers
-            avec la communauté. Suivez vos sessions sur le <strong>Hunt Lab</strong> et retrouvez-nous
-            en direct sur Rumble et Telegram.
+            Lives casino, chasses aux bonus trackées en direct et points à échanger contre de
+            l’USDT.
           </p>
 
           <div className="hero-actions">
@@ -168,9 +151,7 @@ export default function Home() {
             </div>
           </div>
 
-          <p className="affiliate-note">
-            Liens partenaires • 18+ • Jouer comporte des risques • Offres soumises à conditions
-          </p>
+          <p className="affiliate-note">Liens partenaires • 18+ • Jouer comporte des risques</p>
         </div>
 
         <div className="hero-visual" aria-label="Casinos partenaires de Spin District">
@@ -284,14 +265,12 @@ export default function Home() {
             </h2>
           </div>
           <p>
-            Deux casinos, deux philosophies : <strong>Celsius</strong> pour le bonus de bienvenue le
-            plus généreux, <strong>Stake</strong> pour les Originals et un VIP qui tourne toute
-            l’année. Les deux sont accessibles via nos liens partenaires officiels, réservés aux
-            personnes majeures (18+).
+            <strong>Celsius</strong> pour le bonus de bienvenue le plus généreux,{' '}
+            <strong>Stake</strong> pour les Originals et le VIP.
           </p>
         </div>
 
-        <CasinoCards />
+        <CasinoCards compact />
 
         <a
           className="celsius-offer-banner"
@@ -312,55 +291,6 @@ export default function Home() {
           </span>
         </a>
 
-        <div className="benefit-grid">
-          <article className="benefit-card">
-            <span className="benefit-number">01</span>
-            <h3>20 € REMBOURSÉS*</h3>
-            <p>
-              Chez Celsius, votre premier dépôt de 20 € est remboursé selon les conditions de
-              bienvenue du partenaire.
-            </p>
-          </article>
-
-          <article className="benefit-card">
-            <span className="benefit-number">02</span>
-            <h3>RAKEBACK &amp; VIP STAKE</h3>
-            <p>
-              Chez Stake, la valeur se construit dans la durée : rakeback, bonus hebdomadaires et
-              paliers VIP progressifs plutôt qu’un simple bonus d’entrée.
-            </p>
-          </article>
-
-          <article className="benefit-card benefit-featured">
-            <span className="benefit-number">03</span>
-            <h3>TELEGRAM &amp; DISCORD</h3>
-            <p>
-              Annonces de lives instantanées, partages de hunts, giveaways et alertes exclusives pour
-              la communauté.
-            </p>
-            <div className="benefit-links-row">
-              <a
-                href={links.telegram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="benefit-link telegram-link"
-                title="Rejoindre le canal Telegram VIP"
-              >
-                <TelegramIcon /> Canal Telegram <ArrowIcon />
-              </a>
-              <a
-                href={links.discord}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="benefit-link"
-                title="Rejoindre le Discord communautaire"
-              >
-                <DiscordIcon /> Discord <ArrowIcon />
-              </a>
-            </div>
-          </article>
-        </div>
-
         <div className="section-cta-row">
           <Link className="button button-primary" href="/remboursement-celsius">
             Faire rembourser mon dépôt Celsius <ArrowIcon />
@@ -371,10 +301,8 @@ export default function Home() {
         </div>
 
         <p className="offer-terms">
-          *Offres réservées aux personnes majeures (18+), soumises aux conditions générales et aux
-          règles de mise de chaque opérateur. Les bonus ne garantissent aucun gain. Celsius Casino et
-          Stake ne détiennent pas d’agrément ANJ en France. Jouer comporte des risques d’addiction,
-          d’isolement et de pertes financières.
+          *Offres soumises aux conditions des opérateurs • 18+ • Aucun agrément ANJ •{' '}
+          <Link href="/jeu-responsable">conditions et jeu responsable</Link>
         </p>
       </section>
 
@@ -391,12 +319,11 @@ export default function Home() {
           </div>
           <div className="hunt-heading-desc">
             <p>
-              Le <strong>Bonus Hunt Lab</strong> est notre tracker de chasses aux bonus : gratuit,
-              sans inscription, avec le calcul en direct du multiplicateur moyen et du break-even.
+              Notre tracker de chasses aux bonus : gratuit, sans compte, multiplicateur et
+              break-even calculés en direct.
             </p>
             <p className="storage-highlight">
-              💡 <strong>Sauvegarde locale automatique :</strong> fermez l’onglet, éteignez votre
-              ordinateur : toutes vos sessions restent consultables et modifiables lors de votre
+              💾 Tout est sauvegardé dans votre navigateur — vos sessions vous attendent à la
               prochaine visite.
             </p>
           </div>
@@ -423,10 +350,7 @@ export default function Home() {
           </ul>
 
           <div className="hunt-teaser-cta">
-            <p>
-              Ouvrez le Hunt Lab dans son espace dédié : sessions illimitées, tableau complet et
-              statistiques de la chasse.
-            </p>
+            <p>Sessions illimitées, tableau complet, statistiques de la chasse.</p>
             <div className="hunt-teaser-actions">
               <Link className="button button-primary" href="/bonus-hunt">
                 Ouvrir le Hunt Lab <ArrowIcon />
@@ -539,9 +463,7 @@ export default function Home() {
               <em>PAS LE DISTRICT.</em>
             </h2>
             <p>
-              Rejoignez le Discord et le canal Telegram VIP officiel pour être prévenu en direct des
-              prochains lives, échanger sur les machines à sous du moment, participer aux giveaways et
-              recevoir nos alertes exclusives.
+              Discord et Telegram VIP : alertes de live, giveaways et partage de hunts.
             </p>
             <div className="community-perks">
               <span>✦ Alertes Lives</span>
@@ -586,29 +508,23 @@ export default function Home() {
               <em>BONUS HUNT &amp; LE DISTRICT</em>
             </h2>
           </div>
-          <p>
-            Retrouvez les réponses aux questions les plus fréquentes sur le fonctionnement du Bonus
-            Hunt Lab, nos streams, nos casinos partenaires et nos réseaux.
-          </p>
+          <p>L’essentiel en quatre réponses.</p>
         </div>
 
         <div className="faq-grid">
-          <details className="faq-item" open>
+          <details className="faq-item">
             <summary className="faq-question">
-              <span>Qu’est-ce qu’un Bonus Hunt au casino ?</span>
+              <span>Qu’est-ce qu’un Bonus Hunt ?</span>
               <span className="faq-chevron" aria-hidden="true">
                 ↓
               </span>
             </summary>
             <div className="faq-answer">
               <p>
-                Un <strong>Bonus Hunt</strong> (ou chasse aux bonus) est une stratégie populaire de
-                streaming et de jeu de machines à sous. Elle consiste à jouer successivement sur
-                différentes machines jusqu’à déclencher les tours gratuits (bonus), sans les ouvrir
-                immédiatement. Une fois tous les bonus collectés avec une bankroll définie, tous les
-                bonus sont ouverts d’affilée pour découvrir le multiplicateur moyen et le gain total.{' '}
+                Jouer sur plusieurs machines jusqu’à déclencher les tours gratuits sans les ouvrir,
+                puis tout ouvrir d’affilée pour comparer le multiplicateur moyen au break-even.{' '}
                 <Link href="/guide-bonus-hunt" className="faq-link">
-                  Lire le guide complet ↗
+                  Guide complet ↗
                 </Link>
               </p>
             </div>
@@ -616,75 +532,33 @@ export default function Home() {
 
           <details className="faq-item">
             <summary className="faq-question">
-              <span>Comment utiliser le tracker de Bonus Hunt Spin District ?</span>
+              <span>Le Hunt Lab est-il gratuit, et mes sessions sont-elles gardées ?</span>
               <span className="faq-chevron" aria-hidden="true">
                 ↓
               </span>
             </summary>
             <div className="faq-answer">
               <p>
-                Le <strong>Bonus Hunt Lab</strong> est 100% gratuit et sans inscription. Cliquez sur
-                &quot;Ouvrir le Hunt Lab&quot;, nommez votre session et indiquez votre start balance.
-                Ajoutez vos machines parmi le catalogue de plus de 2 000 slots intégrées (Pragmatic
-                Play, Hacksaw, Nolimit City, Play&apos;n GO, etc.), entrez vos mises et notez vos gains
-                lors de l’ouverture. Le tracker calcule en temps réel votre multiplicateur moyen,
-                votre break-even et votre profit net.
+                Gratuit, sans inscription. Tout est enregistré dans le stockage local de votre
+                navigateur : fermez l’onglet, vos sessions sont toujours là. Export CSV et JSON
+                disponibles.
               </p>
             </div>
           </details>
 
           <details className="faq-item">
             <summary className="faq-question">
-              <span>Mes sessions sont-elles conservées après fermeture du navigateur ?</span>
+              <span>Celsius ou Stake : lequel choisir ?</span>
               <span className="faq-chevron" aria-hidden="true">
                 ↓
               </span>
             </summary>
             <div className="faq-answer">
               <p>
-                <strong>Oui !</strong> Le Bonus Hunt Lab enregistre automatiquement chaque
-                modification dans le stockage local de votre navigateur (localStorage). Vos données
-                restent sur votre appareil et ne sont jamais envoyées à un serveur : fermez l’onglet
-                ou redémarrez votre ordinateur, vous retrouverez toutes vos sessions intactes. Vous
-                pouvez également exporter vos hunts en <strong>CSV</strong> ou en{' '}
-                <strong>JSON</strong> pour les archiver ou les transférer sur un autre appareil.
-              </p>
-            </div>
-          </details>
-
-          <details className="faq-item">
-            <summary className="faq-question">
-              <span>Comment rejoindre le canal Telegram VIP Spin District ?</span>
-              <span className="faq-chevron" aria-hidden="true">
-                ↓
-              </span>
-            </summary>
-            <div className="faq-answer">
-              <p>
-                Cliquez sur le bouton <strong>Telegram VIP</strong> dans la barre de navigation en
-                haut du site ou dans la section Communauté. Le canal Telegram officiel vous permet
-                d&apos;être alerté immédiatement avant chaque live Rumble, de recevoir les
-                récapitulatifs des hunts et de participer aux animations exclusives.
-              </p>
-            </div>
-          </details>
-
-          <details className="faq-item">
-            <summary className="faq-question">
-              <span>Celsius ou Stake : quel casino partenaire choisir ?</span>
-              <span className="faq-chevron" aria-hidden="true">
-                ↓
-              </span>
-            </summary>
-            <div className="faq-answer">
-              <p>
-                <strong>Celsius Casino</strong> mise sur le bonus d’entrée : premier dépôt de 20 €
-                remboursé et jusqu’à 550 % de bonus de bienvenue*. <strong>Stake</strong> mise sur la
-                durée : Originals maison (Plinko, Mines, Limbo), rakeback, bonus hebdomadaires et
-                retraits crypto quasi instantanés. Beaucoup de membres utilisent Celsius pour démarrer
-                et Stake pour jouer sur le long terme.{' '}
+                Celsius pour le bonus d’entrée (1er dépôt de 20 € remboursé, jusqu’à 550 %*), Stake
+                pour la durée (Originals, rakeback, retraits crypto).{' '}
                 <Link href="/casinos" className="faq-link">
-                  Voir le comparatif détaillé ↗
+                  Comparatif ↗
                 </Link>
               </p>
             </div>
@@ -692,42 +566,18 @@ export default function Home() {
 
           <details className="faq-item">
             <summary className="faq-question">
-              <span>Les liens vers les casinos sont-ils des liens d’affiliation ?</span>
+              <span>Les liens vers les casinos sont-ils affiliés ?</span>
               <span className="faq-chevron" aria-hidden="true">
                 ↓
               </span>
             </summary>
             <div className="faq-answer">
               <p>
-                Oui, en toute transparence : les liens vers <strong>Stake</strong> et{' '}
-                <strong>Celsius Casino</strong> sont des liens partenaires. Si vous créez un compte
-                via ces liens, Spin District peut percevoir une commission de l’opérateur —{' '}
-                <strong>sans aucun surcoût pour vous</strong>. Cela finance le site, le tracker
-                gratuit et les giveaways. Ces opérateurs ne détiennent pas d’agrément ANJ en France.
-              </p>
-            </div>
-          </details>
-
-          <details className="faq-item">
-            <summary className="faq-question">
-              <span>Quelles sont les règles de Jeu Responsable (18+) ?</span>
-              <span className="faq-chevron" aria-hidden="true">
-                ↓
-              </span>
-            </summary>
-            <div className="faq-answer">
-              <p>
-                Les jeux d’argent sont formellement interdits aux mineurs. Ne considérez jamais le
-                casino comme un moyen de gagner de l’argent ou de rembourser des dettes. Fixez-vous
-                des limites strictes de temps et d’argent, et ne jouez que des sommes que vous pouvez
-                vous permettre de perdre. En cas de doute, contactez{' '}
-                <strong>Joueurs Info Service</strong> au{' '}
-                <a href="tel:0974751313" className="faq-link">
-                  09 74 75 13 13
-                </a>
-                .{' '}
+                Oui. Nous pouvons percevoir une commission si vous créez un compte,{' '}
+                <strong>sans surcoût pour vous</strong>. Ces opérateurs n’ont pas d’agrément ANJ en
+                France.{' '}
                 <Link href="/jeu-responsable" className="faq-link">
-                  Nos règles de jeu responsable ↗
+                  Jeu responsable ↗
                 </Link>
               </p>
             </div>

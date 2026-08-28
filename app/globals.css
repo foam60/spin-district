@@ -7168,3 +7168,148 @@ article[id] {
     height: 44px;
   }
 }
+
+/* =========================================================================
+   BLOCS DE CONDITIONS REPLIABLES
+   Le texte reste dans le HTML (indexable, juridiquement disponible) mais
+   n'impose plus un mur de texte à la lecture.
+   ========================================================================= */
+
+.terms-details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  list-style: none;
+  font-size: clamp(18px, 2.2vw, 24px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.terms-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.terms-details > summary span:last-child {
+  font-size: 18px;
+  color: var(--green);
+  transition: transform 0.25s ease;
+}
+
+.terms-details[open] > summary span:last-child {
+  transform: rotate(180deg);
+}
+
+.terms-details > summary:hover {
+  color: var(--green);
+}
+
+.terms-details > *:not(summary) {
+  margin-top: 18px;
+}
+
+/* =========================================================================
+   DENSITÉ — LE SITE ÉTAIT TROP LONG À PARCOURIR
+   Le texte a été réduit de 38 % ; l'essentiel du reste était structurel :
+   240 px de respiration par section, un hero qui occupait deux écrans en
+   mobile, et des visuels surdimensionnés.
+   ========================================================================= */
+
+.partner-section,
+.hunt-section,
+.live-section {
+  padding-top: 88px;
+  padding-bottom: 88px;
+}
+
+@media (max-width: 992px) {
+  .partner-section,
+  .hunt-section,
+  .live-section,
+  .faq-section,
+  .community-section {
+    padding-top: 52px;
+    padding-bottom: 52px;
+  }
+
+  .section-heading {
+    margin-bottom: 28px;
+    gap: 20px;
+  }
+
+  /* Le visuel du hero (carte Celsius + carte Stake) réapparaît à l'identique
+     dans la section partenaires juste en dessous : sur mobile, où tout
+     s'empile, c'est un écran entier de doublon. */
+  .hero-visual {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .partner-section,
+  .hunt-section,
+  .live-section,
+  .faq-section,
+  .community-section {
+    padding-top: 44px;
+    padding-bottom: 44px;
+  }
+
+  .section-heading h2,
+  .community-copy h2 {
+    font-size: clamp(28px, 8vw, 38px);
+  }
+
+  .content-card {
+    height: 320px;
+  }
+
+  .hunt-howto,
+  .fact-cards {
+    gap: 12px;
+  }
+
+  .site-footer {
+    padding-top: 48px;
+    gap: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  /* La bannière Celsius répète la carte Celsius située juste au-dessus.
+     En desktop les deux cohabitent côte à côte ; empilées sur mobile, c'est
+     redondant et ça coûte un demi-écran. */
+  .celsius-offer-banner {
+    display: none;
+  }
+
+  /* Les quatre atouts du Hunt Lab passent en 2×2 plutôt qu'en colonne. */
+  .hunt-teaser-features {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .hunt-teaser-features li {
+    padding: 14px 14px;
+  }
+
+  .hunt-teaser-features strong {
+    font-size: 16px;
+  }
+
+  .hunt-teaser-features span {
+    font-size: 11.5px;
+  }
+
+  /* Les deux colonnes de liens du footer se placent côte à côte. */
+  .site-footer {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footer-brand,
+  .footer-legal {
+    grid-column: 1 / -1;
+  }
+}

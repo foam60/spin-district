@@ -16,7 +16,17 @@ function CasinoLogo({ casino }: { casino: Casino }) {
   );
 }
 
-export function CasinoCard({ casino, detailed = false }: { casino: Casino; detailed?: boolean }) {
+export function CasinoCard({
+  casino,
+  detailed = false,
+  compact = false,
+}: {
+  casino: Casino;
+  detailed?: boolean;
+  /** Accueil : version resserrée, le détail vit sur /casinos. */
+  compact?: boolean;
+}) {
+  const perks = compact ? casino.perks.slice(0, 2) : casino.perks;
   const style = {
     '--casino-accent': casino.accent,
     '--casino-accent-soft': casino.accentSoft,
@@ -40,28 +50,30 @@ export function CasinoCard({ casino, detailed = false }: { casino: Casino; detai
 
       <p className="casino-highlight">{casino.highlight}</p>
 
-      <dl className="casino-facts">
-        <div>
-          <dt>Paiements</dt>
-          <dd>{casino.currencies}</dd>
-        </div>
-        <div>
-          <dt>Retraits</dt>
-          <dd>{casino.payout}</dd>
-        </div>
-        <div>
-          <dt>Le + du casino</dt>
-          <dd>{casino.vibe}</dd>
-        </div>
-      </dl>
+      {!compact && (
+        <dl className="casino-facts">
+          <div>
+            <dt>Paiements</dt>
+            <dd>{casino.currencies}</dd>
+          </div>
+          <div>
+            <dt>Retraits</dt>
+            <dd>{casino.payout}</dd>
+          </div>
+          <div>
+            <dt>Le + du casino</dt>
+            <dd>{casino.vibe}</dd>
+          </div>
+        </dl>
+      )}
 
       <ul className="casino-perks">
-        {casino.perks.map((perk, index) => (
+        {perks.map((perk, index) => (
           <li key={perk.title}>
             <span>{String(index + 1).padStart(2, '0')}</span>
             <div>
               <strong>{perk.title}</strong>
-              <small>{perk.detail}</small>
+              {!compact && <small>{perk.detail}</small>}
             </div>
           </li>
         ))}
@@ -104,11 +116,17 @@ export function CasinoCard({ casino, detailed = false }: { casino: Casino; detai
   );
 }
 
-export default function CasinoCards({ detailed = false }: { detailed?: boolean }) {
+export default function CasinoCards({
+  detailed = false,
+  compact = false,
+}: {
+  detailed?: boolean;
+  compact?: boolean;
+}) {
   return (
     <div className="casino-grid">
       {casinos.map((casino) => (
-        <CasinoCard key={casino.slug} casino={casino} detailed={detailed} />
+        <CasinoCard key={casino.slug} casino={casino} detailed={detailed} compact={compact} />
       ))}
     </div>
   );
