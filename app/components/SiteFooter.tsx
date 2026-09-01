@@ -18,8 +18,8 @@ export default function SiteFooter() {
 
       <div className="footer-legal">
         <p>
-          <strong>18+</strong> • Liens d’affiliation • Celsius et Stake n’ont pas d’agrément ANJ en
-          France. Jouer comporte des risques.{' '}
+          <strong>18+</strong> • Liens d’affiliation • Nos casinos partenaires n’ont pas
+          d’agrément ANJ en France. Jouer comporte des risques.{' '}
           <Link href="/jeu-responsable">Le détail ↗</Link>
         </p>
         <p className="helpline">

@@ -4,14 +4,18 @@ import { casinos, type Casino } from '../lib/site';
 import { ArrowIcon, StakeMark } from './BrandIcons';
 
 function CasinoLogo({ casino }: { casino: Casino }) {
-  if (casino.slug === 'stake') return <StakeMark size={44} />;
+  if (casino.logo === 'mark') return <StakeMark size={44} />;
+  // Les logos officiels sont des SVG larges : on les affiche à hauteur fixe
+  // plutôt que dans un carré, pour ne pas les écraser.
+  const isWordmark = casino.logo.endsWith('.svg');
   return (
     <Image
-      src="/celsius-icon.webp"
+      src={casino.logo}
       alt=""
-      width={44}
+      width={isWordmark ? 132 : 44}
       height={44}
-      style={{ borderRadius: 10 }}
+      className={isWordmark ? 'casino-wordmark' : undefined}
+      style={isWordmark ? undefined : { borderRadius: 10 }}
     />
   );
 }
@@ -39,7 +43,7 @@ export function CasinoCard({
         <div className="casino-identity">
           <CasinoLogo casino={casino} />
           <div>
-            <h3>{casino.name}</h3>
+            <h3 className={casino.logo.endsWith('.svg') ? 'sr-only' : undefined}>{casino.name}</h3>
             <small>{casino.tagline}</small>
           </div>
         </div>
@@ -50,20 +54,26 @@ export function CasinoCard({
 
       <p className="casino-highlight">{casino.highlight}</p>
 
-      {!compact && (
+      {!compact && (casino.currencies || casino.payout || casino.vibe) && (
         <dl className="casino-facts">
-          <div>
-            <dt>Paiements</dt>
-            <dd>{casino.currencies}</dd>
-          </div>
-          <div>
-            <dt>Retraits</dt>
-            <dd>{casino.payout}</dd>
-          </div>
-          <div>
-            <dt>Le + du casino</dt>
-            <dd>{casino.vibe}</dd>
-          </div>
+          {casino.currencies && (
+            <div>
+              <dt>Paiements</dt>
+              <dd>{casino.currencies}</dd>
+            </div>
+          )}
+          {casino.payout && (
+            <div>
+              <dt>Retraits</dt>
+              <dd>{casino.payout}</dd>
+            </div>
+          )}
+          {casino.vibe && (
+            <div>
+              <dt>Le + du casino</dt>
+              <dd>{casino.vibe}</dd>
+            </div>
+          )}
         </dl>
       )}
 

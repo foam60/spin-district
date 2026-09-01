@@ -7324,3 +7324,100 @@ article[id] {
   text-transform: uppercase;
   color: #ffb020;
 }
+
+/* =========================================================================
+   LOGOS OFFICIELS DES CASINOS
+   Les assets Fieryplay et Zeppelin sont des wordmarks larges : hauteur fixe
+   et largeur automatique, sinon ils seraient écrasés dans un carré.
+   ========================================================================= */
+
+.casino-wordmark {
+  width: auto;
+  height: 36px;
+  max-width: 175px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* Quatre colonnes de casinos : le tableau défile plutôt que de se tasser. */
+.compare-table {
+  min-width: 900px;
+}
+
+@media (max-width: 640px) {
+  .casino-wordmark {
+    height: 30px;
+    max-width: 150px;
+  }
+}
+
+/* Quatre casinos : `auto-fit` produisait 3 colonnes puis une carte seule sur
+   la ligne suivante. Deux colonnes donnent une grille 2×2 équilibrée, et
+   laissent de la place aux cartes détaillées de /casinos. */
+@media (min-width: 993px) {
+  .casino-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================================
+   DÉTAIL D'UN PACK DE BIENVENUE (replié)
+   ========================================================================= */
+
+.bonus-pack {
+  padding: 24px 28px;
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  background: linear-gradient(150deg, rgba(168, 255, 0, 0.04), rgba(10, 17, 13, 0.9));
+}
+
+.bonus-pack-total {
+  margin: 0 0 18px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #c3ccc5;
+}
+
+.bonus-pack-table {
+  min-width: 700px;
+}
+
+.bonus-pack-table tbody th {
+  width: 110px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.bonus-pack-table tbody th:empty {
+  border-top: none;
+}
+
+.bonus-pack-table strong {
+  font-family: var(--font-mono);
+  font-size: 15px;
+}
+
+.bonus-pack-table small {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted-dark);
+}
+
+.bonus-tier-note {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px !important;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #ffb020 !important;
+}
+
+@media (max-width: 640px) {
+  .bonus-pack {
+    padding: 18px;
+  }
+}

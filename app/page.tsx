@@ -38,10 +38,10 @@ const homeJsonLd = {
         },
         {
           '@type': 'Question',
-          name: 'Celsius ou Stake : lequel choisir ?',
+          name: 'Quel casino partenaire choisir ?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Celsius pour le bonus d’entrée (premier dépôt de 20 € remboursé, jusqu’à 550 %), Stake pour la durée (Originals, rakeback, retraits crypto).',
+            text: 'Fieryplay pour le plus gros pack de bienvenue (jusqu’à 2 500 € et 525 tours gratuits), Celsius pour le premier dépôt remboursé, Stake pour la durée (Originals, rakeback), Zeppelin pour ses 100 tours gratuits sur Gates of Olympus.',
           },
         },
         {
@@ -136,7 +136,7 @@ export default function Home() {
 
           <div className="hero-trust-bar">
             <div className="trust-item">
-              <strong>2</strong>
+              <strong>4</strong>
               <span>Casinos partenaires</span>
             </div>
             <div className="trust-separator" />
@@ -259,14 +259,14 @@ export default function Home() {
           <div>
             <span className="section-index">01 — PARTENAIRES</span>
             <h2 id="partner-title">
-              TES DEUX ACCÈS AU
+              TES ACCÈS AU
               <br />
               <em>DISTRICT</em>
             </h2>
           </div>
           <p>
-            <strong>Celsius</strong> pour le bonus de bienvenue le plus généreux,{' '}
-            <strong>Stake</strong> pour les Originals et le VIP.
+            Quatre casinos testés en live. <strong>Fieryplay</strong> pour le plus gros pack,{' '}
+            <strong>Zeppelin</strong> pour ses 100 tours gratuits.
           </p>
         </div>
 
@@ -548,15 +548,16 @@ export default function Home() {
 
           <details className="faq-item">
             <summary className="faq-question">
-              <span>Celsius ou Stake : lequel choisir ?</span>
+              <span>Quel casino partenaire choisir ?</span>
               <span className="faq-chevron" aria-hidden="true">
                 ↓
               </span>
             </summary>
             <div className="faq-answer">
               <p>
-                Celsius pour le bonus d’entrée (1er dépôt de 20 € remboursé, jusqu’à 550 %*), Stake
-                pour la durée (Originals, rakeback, retraits crypto).{' '}
+                Fieryplay pour le plus gros pack (jusqu’à 2 500 € + 525 tours*), Celsius pour le
+                1er dépôt remboursé, Stake pour la durée, Zeppelin pour 100 tours gratuits sur
+                Gates of Olympus*.{' '}
                 <Link href="/casinos" className="faq-link">
                   Comparatif ↗
                 </Link>

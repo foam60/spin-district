@@ -157,8 +157,8 @@ export default function ResponsibleGamingPage() {
       <section className="page-section prose disclosure-box" aria-labelledby="affil-title">
         <h2 id="affil-title">Transparence : nos liens sont des liens d’affiliation</h2>
         <p>
-          Spin District est financé par l’affiliation. Les liens vers <strong>Stake</strong> et{' '}
-          <strong>Celsius Casino</strong> présents sur le site sont des liens partenaires : si vous
+          Spin District est financé par l’affiliation. Les liens vers nos{' '}
+          <strong>casinos partenaires</strong> présents sur le site sont des liens partenaires : si vous
           créez un compte via ces liens, nous pouvons percevoir une commission versée par l’opérateur,{' '}
           <strong>sans aucun surcoût pour vous</strong> et sans modification des offres auxquelles
           vous avez droit.
@@ -169,7 +169,7 @@ export default function ResponsibleGamingPage() {
         </p>
         <p>
           <strong>Cadre légal :</strong> en France, le casino en ligne n’est pas ouvert à la licence
-          ANJ. Celsius Casino et Stake sont régulés à l’étranger et{' '}
+          ANJ. Nos partenaires sont régulés à l’étranger et{' '}
           <strong>ne détiennent pas d’agrément ANJ</strong> : les protections du cadre français ne
           s’appliquent pas à ces plateformes. Renseignez-vous sur la réglementation applicable dans
           votre pays de résidence avant de créer un compte.

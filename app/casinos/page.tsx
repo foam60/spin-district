@@ -2,12 +2,12 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import CasinoCards from '../components/CasinoCards';
 import PageShell from '../components/PageShell';
-import { ArrowIcon, StakeMark } from '../components/BrandIcons';
-import { casinos, links, siteUrl } from '../lib/site';
+import { ArrowIcon } from '../components/BrandIcons';
+import { casinos, siteUrl, type Casino } from '../lib/site';
 
-const title = 'Casinos partenaires : Stake vs Celsius Casino — comparatif 2026';
+const title = 'Casinos partenaires 2026 : Stake, Celsius, Fieryplay et Zeppelin';
 const description =
-  'Comparatif des deux casinos partenaires de Spin District : Stake (Originals, rakeback, retraits crypto) et Celsius Casino (jusqu’à 550 % de bonus, 1er dépôt de 20 € remboursé). Bonus, paiements, points forts et limites. 18+.';
+  'Comparatif des casinos partenaires de Spin District : Stake, Celsius Casino, Fieryplay (jusqu’à 2 500 € + 525 tours gratuits) et Zeppelin (100 tours gratuits sur Gates of Olympus). Offres, points forts et limites. 18+.';
 
 export const metadata: Metadata = {
   title,
@@ -21,22 +21,18 @@ export const metadata: Metadata = {
   },
 };
 
-const comparisonRows: { label: string; celsius: string; stake: string }[] = [
-  {
-    label: 'Bonus de bienvenue',
-    celsius: 'Jusqu’à 550 % + 1er dépôt de 20 € remboursé*',
-    stake: 'Bonus d’entrée modéré, valeur sur la durée',
-  },
-  {
-    label: 'Récompenses régulières',
-    celsius: 'Free spins & cashback VIP*',
-    stake: 'Rakeback, bonus hebdo, paliers VIP progressifs',
-  },
-  { label: 'Moyens de paiement', celsius: 'Crypto & cartes bancaires', stake: '20+ cryptos (BTC, ETH, LTC, SOL…)' },
-  { label: 'Vitesse de retrait', celsius: 'Retraits crypto rapides', stake: 'Retraits crypto quasi instantanés' },
-  { label: 'Jeux exclusifs', celsius: 'Catalogue slots complet', stake: 'Stake Originals (Plinko, Mines, Limbo, Crash)' },
-  { label: 'Profil conseillé', celsius: 'Démarrer avec la plus grosse bankroll bonus', stake: 'Jouer régulièrement sur le long terme' },
-  { label: 'Licence ANJ (France)', celsius: 'Non', stake: 'Non' },
+/**
+ * Le tableau est construit à partir du catalogue : ajouter un casino dans
+ * `app/lib/site.ts` suffit pour qu'une colonne apparaisse ici.
+ * Une valeur non vérifiée reste vide plutôt qu'inventée.
+ */
+const comparisonRows: { label: string; value: (casino: Casino) => string }[] = [
+  { label: 'Offre de bienvenue', value: (c) => c.highlight.replace(/\*$/, '') },
+  { label: 'Le + du casino', value: (c) => c.vibe ?? '—' },
+  { label: 'Moyens de paiement', value: (c) => c.currencies ?? 'Non communiqué' },
+  { label: 'Retraits', value: (c) => c.payout ?? 'Non communiqué' },
+  { label: 'À garder en tête', value: (c) => c.watchouts[0] },
+  { label: 'Licence ANJ (France)', value: () => 'Non' },
 ];
 
 const jsonLd = {
@@ -63,7 +59,7 @@ export default function CasinosPage() {
       eyebrow="COMPARATIF — CASINOS PARTENAIRES"
       title={
         <>
-          STAKE <em>VS</em> CELSIUS
+          QUATRE CASINOS
           <br />
           <span className="gradient-text">LEQUEL POUR TOI ?</span>
         </>
@@ -71,10 +67,10 @@ export default function CasinosPage() {
       intro={
         <>
           <p>
-            Spin District travaille avec <strong>deux casinos partenaires</strong> et un seul. Pas
-            trente. Celsius Casino pour le package de bienvenue le plus agressif, et{' '}
-            <strong>Stake</strong> — la plateforme la plus utilisée par les streamers casino au monde
-            — pour ses Originals et son VIP progressif.
+            Quatre casinos, pas trente : <strong>Fieryplay</strong> pour le plus gros pack de
+            bienvenue, <strong>Celsius</strong> pour le premier dépôt remboursé,{' '}
+            <strong>Stake</strong> pour les Originals et le VIP, <strong>Zeppelin</strong> pour ses
+            100 tours gratuits sur Gates of Olympus.
           </p>
           <p className="page-hero-note">
             Liens partenaires • 18+ • Aucun de ces opérateurs ne détient d’agrément ANJ en France
@@ -86,36 +82,93 @@ export default function CasinosPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <section className="page-section" aria-labelledby="cards-title">
-        <h2 id="cards-title">Les deux casinos en détail</h2>
+        <h2 id="cards-title">Les casinos en détail</h2>
         <CasinoCards detailed />
       </section>
+
+      {casinos
+        .filter((casino) => casino.welcomePackage)
+        .map((casino) => (
+          <section className="page-section" key={`pack-${casino.slug}`}>
+            <details className="terms-details bonus-pack">
+              <summary>
+                <span>Détail du pack de bienvenue {casino.name}</span>
+                <span aria-hidden="true">↓</span>
+              </summary>
+
+              <p className="bonus-pack-total">{casino.welcomePackage!.total}</p>
+
+              <div className="compare-table-wrap">
+                <table className="compare-table bonus-pack-table">
+                  <caption className="sr-only">
+                    Paliers du bonus de bienvenue {casino.name}, dépôt par dépôt
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Dépôt</th>
+                      <th scope="col">Montant minimum</th>
+                      <th scope="col">Bonus</th>
+                      <th scope="col">Tours gratuits</th>
+                      <th scope="col">Machine</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {casino.welcomePackage!.steps.map((step) =>
+                      step.tiers.map((tier, index) => (
+                        <tr key={`${step.label}-${tier.minDeposit}-${tier.bonus}`}>
+                          <th scope="row">{index === 0 ? step.label : ''}</th>
+                          <td>
+                            {tier.minDeposit}
+                            {tier.note && <small className="bonus-tier-note">{tier.note}</small>}
+                          </td>
+                          <td>
+                            <strong style={{ color: casino.accent }}>{tier.bonus}</strong>{' '}
+                            <small>{tier.cap}</small>
+                          </td>
+                          <td>{tier.spins}</td>
+                          <td>{tier.slot}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="shop-rate-note">
+                Paliers relevés sur la page de bonus de l’opérateur. Les conditions de mise
+                (wager) ne sont pas reprises ici : lisez-les sur le site avant de réclamer.{' '}
+                <Link href="/jeu-responsable">Jeu responsable</Link>.
+              </p>
+            </details>
+          </section>
+        ))}
 
       <section className="page-section" aria-labelledby="table-title">
         <h2 id="table-title">Tableau comparatif</h2>
         <div className="compare-table-wrap">
           <table className="compare-table">
             <caption className="sr-only">
-              Comparatif des offres Celsius Casino et Stake proposées par Spin District
+              Comparatif des offres des casinos partenaires de Spin District
             </caption>
             <thead>
               <tr>
                 <th scope="col">Critère</th>
-                <th scope="col">
-                  <span className="th-brand th-celsius">Celsius Casino</span>
-                </th>
-                <th scope="col">
-                  <span className="th-brand th-stake">
-                    <StakeMark size={18} /> Stake
-                  </span>
-                </th>
+                {casinos.map((casino) => (
+                  <th scope="col" key={casino.slug}>
+                    <span className="th-brand" style={{ color: casino.accent }}>
+                      {casino.name}
+                    </span>
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {comparisonRows.map((row) => (
                 <tr key={row.label}>
                   <th scope="row">{row.label}</th>
-                  <td>{row.celsius}</td>
-                  <td>{row.stake}</td>
+                  {casinos.map((casino) => (
+                    <td key={casino.slug}>{row.value(casino)}</td>
+                  ))}
                 </tr>
               ))}
             </tbody>
@@ -123,26 +176,22 @@ export default function CasinosPage() {
         </div>
 
         <div className="compare-cta-row">
+          {casinos.map((casino) => (
+            <a
+              key={casino.slug}
+              className="button button-ghost"
+              href={casino.url}
+              target="_blank"
+              rel="sponsored noopener noreferrer"
+            >
+              Ouvrir {casino.name} <ArrowIcon />
+            </a>
+          ))}
           <Link className="button button-primary" href="/remboursement-celsius">
-            Demander le remboursement de mon dépôt <ArrowIcon />
+            Remboursement du dépôt Celsius <ArrowIcon />
           </Link>
-          <a
-            className="button button-ghost"
-            href={links.celsius}
-            target="_blank"
-            rel="sponsored noopener noreferrer"
-          >
-            Ouvrir Celsius Casino <ArrowIcon />
-          </a>
-          <a
-            className="button button-stake"
-            href={links.stake}
-            target="_blank"
-            rel="sponsored noopener noreferrer"
-          >
-            <StakeMark size={18} /> Ouvrir Stake <ArrowIcon />
-          </a>
         </div>
+
       </section>
 
       <section className="page-section" aria-labelledby="method-title">
@@ -186,7 +235,7 @@ export default function CasinosPage() {
       <section className="page-section disclosure-box" aria-labelledby="disclosure-title">
         <h2 id="disclosure-title">Transparence sur nos liens partenaires</h2>
         <p>
-          Les liens vers Stake et Celsius Casino présents sur cette page sont des{' '}
+          Les liens vers les casinos présents sur cette page sont des{' '}
           <strong>liens d’affiliation</strong>. Si vous créez un compte via ces liens, Spin District
           peut percevoir une commission versée par l’opérateur — <strong>sans surcoût pour vous</strong>
           , et sans modifier les offres auxquelles vous avez droit. Ce financement permet de maintenir
@@ -194,7 +243,7 @@ export default function CasinosPage() {
           communautaires.
         </p>
         <p>
-          Ces deux opérateurs <strong>ne détiennent pas d’agrément de l’ANJ</strong> (Autorité
+          Ces opérateurs <strong>ne détiennent pas d’agrément de l’ANJ</strong> (Autorité
           nationale des jeux) : en France, le casino en ligne n’est pas ouvert à la licence. Vous
           jouez donc sous votre propre responsabilité, sur des plateformes régulées à l’étranger, et
           les protections du cadre français ne s’appliquent pas.
