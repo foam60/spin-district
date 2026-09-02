@@ -7,7 +7,7 @@ import { casinos, siteUrl, type Casino } from '../lib/site';
 
 const title = 'Casinos partenaires 2026 : Stake, Celsius, Fieryplay et Zeppelin';
 const description =
-  'Comparatif des casinos partenaires de Spin District : Stake, Celsius Casino, Fieryplay (jusqu’à 2 500 € + 525 tours gratuits) et Zeppelin (100 tours gratuits sur Gates of Olympus). Offres, points forts et limites. 18+.';
+  'Comparatif des casinos partenaires de Spin District : Stake, Celsius Casino, Fieryplay (jusqu’à 2 500 € + 525 tours gratuits) et Zeppelin (100 tours gratuits sans dépôt sur Gates of Olympus). Offres, points forts et limites. 18+.';
 
 export const metadata: Metadata = {
   title,
@@ -70,7 +70,7 @@ export default function CasinosPage() {
             Quatre casinos, pas trente : <strong>Fieryplay</strong> pour le plus gros pack de
             bienvenue, <strong>Celsius</strong> pour le premier dépôt remboursé,{' '}
             <strong>Stake</strong> pour les Originals et le VIP, <strong>Zeppelin</strong> pour ses
-            100 tours gratuits sur Gates of Olympus.
+            100 tours gratuits sans dépôt sur Gates of Olympus.
           </p>
           <p className="page-hero-note">
             Liens partenaires • 18+ • Aucun de ces opérateurs ne détient d’agrément ANJ en France

@@ -41,7 +41,7 @@ const homeJsonLd = {
           name: 'Quel casino partenaire choisir ?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Fieryplay pour le plus gros pack de bienvenue (jusqu’à 2 500 € et 525 tours gratuits), Celsius pour le premier dépôt remboursé, Stake pour la durée (Originals, rakeback), Zeppelin pour ses 100 tours gratuits sur Gates of Olympus.',
+            text: 'Fieryplay pour le plus gros pack de bienvenue (jusqu’à 2 500 € et 525 tours gratuits), Celsius pour le premier dépôt remboursé, Stake pour la durée (Originals, rakeback), Zeppelin pour ses 100 tours gratuits sans dépôt sur Gates of Olympus.',
           },
         },
         {
@@ -266,7 +266,7 @@ export default function Home() {
           </div>
           <p>
             Quatre casinos testés en live. <strong>Fieryplay</strong> pour le plus gros pack,{' '}
-            <strong>Zeppelin</strong> pour ses 100 tours gratuits.
+            <strong>Zeppelin</strong> pour 100 tours gratuits <strong>sans dépôt</strong>.
           </p>
         </div>
 
@@ -556,8 +556,8 @@ export default function Home() {
             <div className="faq-answer">
               <p>
                 Fieryplay pour le plus gros pack (jusqu’à 2 500 € + 525 tours*), Celsius pour le
-                1er dépôt remboursé, Stake pour la durée, Zeppelin pour 100 tours gratuits sur
-                Gates of Olympus*.{' '}
+                1er dépôt remboursé, Stake pour la durée, Zeppelin pour 100 tours gratuits{' '}
+                <strong>sans dépôt</strong> sur Gates of Olympus*.{' '}
                 <Link href="/casinos" className="faq-link">
                   Comparatif ↗
                 </Link>

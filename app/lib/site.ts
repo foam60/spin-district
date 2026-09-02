@@ -7,8 +7,15 @@ export const links = {
   stake: process.env.NEXT_PUBLIC_STAKE_AFFILIATE_URL ?? 'https://stake.bet/?c=RNOcBLU2',
   // L'identifiant d'affiliation est dans le chemin (/l/6a96…), pas dans un
   // paramètre : les macros {sub_id_1} / {click_id} restées littérales ne
-  // peuvent donc pas casser l'attribution. Vérifié : redirige vers la landing
-  // page avec ref=vp_w269768c393071l24284p2519_ intact.
+  // peuvent donc pas casser l'attribution des commissions.
+  //
+  // En revanche la ref finale n'est PAS intacte — `sub_id` y est concaténé :
+  //   sans paramètre  -> ref=vp_w269768c393071l24284p2519_
+  //   sub_id=site     -> ref=vp_w269768c393071l24284p2519_site
+  //   macros brutes   -> ref=vp_w269768c393071l24284p2519_{sub_id_1}
+  // Les commissions tombent quand même, mais la segmentation par source est
+  // inutilisable. Remplacer par `?sub_id=site` pour distinguer le trafic du
+  // site de celui du chat Rumble (qui utilise `?sub_id=rumble`).
   fieryplay:
     process.env.NEXT_PUBLIC_FIERYPLAY_AFFILIATE_URL ??
     'https://promo-fieryplay.com/l/6a96a8719ad17ced6a0dae82?sub_id={sub_id_1}&click_id={click_id}',
@@ -213,22 +220,22 @@ export const casinos: Casino[] = [
   {
     slug: 'zeppelin',
     name: 'Zeppelin',
-    tagline: '100 tours gratuits sur Gates of Olympus',
+    tagline: '100 tours gratuits sans dépôt',
     url: links.zeppelin,
     accent: '#f304c2',
     accentSoft: 'rgba(243, 4, 194, 0.16)',
     surface: 'linear-gradient(150deg, #2a1030 0%, #14071a 100%)',
-    highlight: '100 tours gratuits sur Gates of Olympus au premier dépôt*',
+    highlight: '100 tours gratuits sur Gates of Olympus, SANS dépôt*',
     logo: '/zeppelin-logo.svg',
-    vibe: 'Animations quotidiennes (roue, check-in)',
+    vibe: 'Le seul à offrir des tours sans dépôt',
     perks: [
       {
-        title: '100 tours gratuits sur Gates of Olympus*',
-        detail: 'Offerts au premier dépôt via le lien Spin District.',
+        title: '100 tours gratuits sans dépôt*',
+        detail: 'Sur Gates of Olympus, à l’inscription via le lien Spin District.',
       },
       {
         title: 'Roue de fortune et check-in quotidien',
-        detail: 'Des récompenses à récupérer chaque jour, sans dépôt.',
+        detail: 'Des récompenses à récupérer chaque jour, sans dépôt non plus.',
       },
       {
         title: 'Slots, crash et casino live',
@@ -236,13 +243,15 @@ export const casinos: Casino[] = [
       },
     ],
     strengths: [
-      'Offre de bienvenue simple et lisible : 100 tours, une slot connue',
-      'Animations récurrentes (roue quotidienne, check-in) sans dépôt',
+      'Le seul des quatre à offrir des tours gratuits sans aucun dépôt',
+      'Aucun risque financier pour essayer : rien à déposer',
+      'Animations récurrentes (roue quotidienne, check-in) également sans dépôt',
       'Interface en français, jeux crash et Originals inclus',
     ],
     watchouts: [
-      'Offre plus petite qu’un package multi-dépôts',
       'Conditions de mise des tours gratuits à vérifier sur le site',
+      'Un retrait exigera une vérification d’identité (KYC)',
+      'Pas de package multi-dépôts comme chez Fieryplay ou Celsius',
       'Opérateur hors licence ANJ : la réglementation française ne s’applique pas',
     ],
   },
