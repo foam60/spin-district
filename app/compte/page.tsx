@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
-import AccountDashboard, { Stepper } from '../components/AccountDashboard';
+import AccountDashboard from '../components/AccountDashboard';
 import PageShell from '../components/PageShell';
 import { DiscordSignIn } from '../components/AccountPanel';
+import InAppBrowserNotice from '../components/InAppBrowserNotice';
 import { DiscordIcon } from '../components/BrandIcons';
 import { links, siteUrl } from '../lib/site';
 import { createClient } from '@/utils/supabase/server';
@@ -78,16 +79,18 @@ export default async function ComptePage({
         </>
       }
       intro={
-        <>
-          <p>
-            Liez votre pseudo Rumble à votre compte Discord pour cumuler des points pendant les
-            lives et les échanger contre des cartes cadeaux USDT dans la boutique.
-          </p>
+        user ? (
           <p className="page-hero-note">
-            Points gagnés en participant • Jamais achetables avec de l’argent • Échangeables en
-            cartes cadeaux USDT • 18+
+            {link ? 'Compte lié — tout est prêt.' : 'Dernière étape : lier votre pseudo Rumble.'}
           </p>
-        </>
+        ) : (
+          <>
+            <p>
+              Cumulez des points pendant les lives et échangez-les contre des cartes cadeaux USDT.
+            </p>
+            <p className="page-hero-note">Gratuit • Sans mot de passe • 18+</p>
+          </>
+        )
       }
       crumbs={[{ name: 'Mon compte', path: '/compte' }]}
     >
@@ -98,38 +101,26 @@ export default async function ComptePage({
       )}
 
       {!user ? (
-        <>
-          <Stepper current={0} />
+        <section className="page-section account-auth-section" aria-labelledby="signin-title">
+          <div className="account-auth-card">
+            <span className="auth-glyph" aria-hidden="true">
+              <DiscordIcon size={26} />
+            </span>
+            <h2 id="signin-title">Connexion en un clic</h2>
+            <p>Pas de mot de passe à créer, pas de formulaire.</p>
 
-          <section className="page-section account-auth-section" aria-labelledby="signin-title">
-            <div className="account-auth-card">
-              <span className="auth-glyph" aria-hidden="true">
-                <DiscordIcon size={26} />
-              </span>
-              <h2 id="signin-title">Connectez-vous avec Discord</h2>
-              <p>
-                Un seul clic, aucun mot de passe à créer et aucune donnée bancaire. Votre compte
-                Discord sert uniquement d’identifiant pour rattacher vos points.
-              </p>
+            <InAppBrowserNotice />
 
-              <DiscordSignIn />
+            <DiscordSignIn />
 
-              <ul className="account-hint-list is-checks">
-                <li>Aucun mot de passe, aucune carte bancaire</li>
-                <li>Points gagnés en participant, jamais achetés</li>
-                <li>Échangeables contre des cartes cadeaux USDT</li>
-                <li>Déconnexion possible à tout moment</li>
-              </ul>
-
-              <p className="account-auth-footer">
-                Pas encore sur le serveur ?{' '}
-                <a href={links.discord} target="_blank" rel="noopener noreferrer">
-                  Rejoindre le Discord Spin District ↗
-                </a>
-              </p>
-            </div>
-          </section>
-        </>
+            <p className="account-auth-footer">
+              Pas encore sur le serveur ?{' '}
+              <a href={links.discord} target="_blank" rel="noopener noreferrer">
+                Rejoindre le Discord ↗
+              </a>
+            </p>
+          </div>
+        </section>
       ) : (
         <AccountDashboard
           pseudo={pseudo}

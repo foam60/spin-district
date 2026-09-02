@@ -5255,13 +5255,26 @@ article[id] {
 
 @media (max-width: 860px) {
   .account-stepper {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    margin-bottom: 32px;
+    gap: 6px;
+    margin-bottom: 24px;
   }
 
   .account-stepper li {
-    padding: 12px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px 12px;
+  }
+
+  .account-stepper .step-bullet {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+  }
+
+  .account-stepper .step-label {
+    font-size: 11px;
+    line-height: 1.25;
   }
 
   .account-identity-bar {
@@ -7419,5 +7432,150 @@ article[id] {
 @media (max-width: 640px) {
   .bonus-pack {
     padding: 18px;
+  }
+}
+
+/* =========================================================================
+   LIAISON DU COMPTE — SÉQUENCE D'ACTIONS
+   Le code expire en quelques minutes et n'est validable que pendant un live :
+   l'ordre « ouvrir le live → générer → coller » évite le code mort.
+   ========================================================================= */
+
+.link-live-warning {
+  font-size: 14px;
+}
+
+.link-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.link-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.link-step-num {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--green);
+  color: #050a02;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.link-steps li > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding-top: 2px;
+}
+
+.link-steps strong {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.link-steps a:not(.button) {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green);
+  border-bottom: 1px solid rgba(168, 255, 0, 0.4);
+}
+
+.link-steps small {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.link-step-btn {
+  min-height: 44px;
+  font-size: 11.5px;
+}
+
+.link-live-cta {
+  align-self: flex-start;
+}
+
+@media (max-width: 640px) {
+  .link-step-btn,
+  .link-live-cta {
+    width: 100%;
+  }
+}
+
+/* =========================================================================
+   AVERTISSEMENT NAVIGATEUR INTÉGRÉ (Discord, Telegram…)
+   ========================================================================= */
+
+.inapp-notice {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 176, 32, 0.4);
+  border-left: 3px solid #ffb020;
+  border-radius: 0 10px 10px 0;
+  background: rgba(255, 176, 32, 0.09);
+  text-align: left;
+}
+
+.inapp-notice p {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #ffd894;
+}
+
+.inapp-notice strong {
+  color: #ffffff;
+}
+
+.inapp-notice-fix {
+  color: var(--muted) !important;
+}
+
+.inapp-notice-btn {
+  min-height: 38px;
+  width: 100%;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 176, 32, 0.5);
+  border-radius: 6px;
+  background: transparent;
+  color: #ffb020;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.inapp-notice-btn:hover {
+  background: #ffb020;
+  color: #1a1204;
+}
+
+/* Quand l'avertissement est là, l'écran mobile est saturé : on sacrifie le
+   médaillon décoratif pour garder le bouton de connexion visible sans scroll.
+   Sans support de :has(), le médaillon reste — dégradation sans conséquence. */
+@media (max-width: 600px) {
+  .account-auth-card:has(.inapp-notice) .auth-glyph {
+    display: none;
+  }
+
+  .account-auth-card:has(.inapp-notice) h2 {
+    margin-bottom: 10px;
   }
 }

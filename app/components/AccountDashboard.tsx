@@ -154,32 +154,24 @@ export default function AccountDashboard({
 
             <article className="account-card">
               <header className="account-card-head">
-                <span className="account-step-tag">Aide</span>
-                <h2>Comment ça marche</h2>
+                <span className="account-step-tag">Pourquoi lier</span>
+                <h2>Ce que ça débloque</h2>
               </header>
-              <ol className="account-howto">
-                <li>Générez votre code ci-contre.</li>
-                <li>
-                  Ouvrez le{' '}
-                  <a href={links.stream} target="_blank" rel="noopener noreferrer">
-                    live Rumble ↗
-                  </a>{' '}
-                  et connectez-vous avec le pseudo à lier.
-                </li>
-                <li>
-                  Collez la commande <code>!verify …</code> dans le chat.
-                </li>
-                <li>Rechargez cette page : votre solde apparaît.</li>
-              </ol>
               <p className="account-card-text">
-                Le code n’est valable que quelques minutes et ne fonctionne qu’une fois — c’est ce
-                qui empêche quelqu’un d’autre de revendiquer votre pseudo.
+                Sans ce lien, le bot ne sait pas que le pseudo du chat, c’est vous : vos points
+                existent mais ne sont rattachés à aucun compte.
               </p>
+              <ul className="account-hint-list is-checks">
+                <li>Voir votre solde de points ici</li>
+                <li>L’échanger contre des cartes cadeaux USDT</li>
+                <li>Jouer vos points au blackjack</li>
+              </ul>
             </article>
           </>
         )}
       </section>
 
+      {link && (
       <section className="page-section" aria-labelledby="shop-title">
         <article className="account-card is-shop">
           <header className="account-card-head">
@@ -214,6 +206,7 @@ export default function AccountDashboard({
           </div>
         </article>
       </section>
+      )}
     </>
   );
 }

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { formatCountdown, secondsUntil } from '../lib/verification';
+import { links } from '../lib/site';
 import { ArrowIcon, DiscordIcon } from './BrandIcons';
 
 type ActiveCode = { code: string; expiresAt: string };
@@ -129,30 +130,56 @@ export function LinkCodePanel({ initialCode }: { initialCode: ActiveCode | null 
 
       {!active || expired ? (
         <>
-          <p className="account-card-text">
-            Générez un code à usage unique, puis tapez-le dans le chat du live. Le bot associe
-            alors le pseudo Rumble utilisé à ce compte, et vos points apparaissent ici.
+          <p className="account-notice is-warning link-live-warning" role="note">
+            À faire <strong>pendant un live</strong> : le bot doit être dans le chat pour valider
+            votre code.
           </p>
+
           {expired && (
             <p className="account-notice is-warning" role="status">
-              Ce code a expiré. Générez-en un nouveau pour réessayer.
+              Ce code a expiré. Générez-en un nouveau juste avant de le coller.
             </p>
           )}
-          <button
-            type="button"
-            className="button button-primary account-action"
-            onClick={request}
-            disabled={pending}
-            aria-busy={pending}
-          >
-            {pending ? 'Génération…' : expired ? 'Générer un nouveau code' : 'Générer mon code'}
-            <ArrowIcon />
-          </button>
+
+          <ol className="link-steps">
+            <li>
+              <span className="link-step-num">1</span>
+              <div>
+                <strong>Ouvrez le live</strong>
+                <a href={links.stream} target="_blank" rel="noopener noreferrer">
+                  Chaîne Rumble ↗
+                </a>
+              </div>
+            </li>
+            <li>
+              <span className="link-step-num">2</span>
+              <div>
+                <strong>Générez votre code</strong>
+                <button
+                  type="button"
+                  className="button button-primary link-step-btn"
+                  onClick={request}
+                  disabled={pending}
+                  aria-busy={pending}
+                >
+                  {pending ? 'Génération…' : expired ? 'Nouveau code' : 'Générer mon code'}
+                  <ArrowIcon />
+                </button>
+              </div>
+            </li>
+            <li>
+              <span className="link-step-num">3</span>
+              <div>
+                <strong>Collez-le dans le chat</strong>
+                <small>Le solde apparaît ici aussitôt après.</small>
+              </div>
+            </li>
+          </ol>
         </>
       ) : (
         <>
           <p className="account-card-text">
-            Copiez cette commande et collez-la dans le chat Rumble pendant le live :
+            Copiez cette commande et collez-la dans le chat du live :
           </p>
 
           <div className="code-block">
@@ -175,9 +202,18 @@ export function LinkCodePanel({ initialCode }: { initialCode: ActiveCode | null 
             </p>
           </div>
 
+          <a
+            className="button button-primary link-live-cta"
+            href={links.stream}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Ouvrir le chat du live <ArrowIcon />
+          </a>
+
           <ul className="account-hint-list">
-            <li>Usage unique : le code est consommé dès qu’il est validé.</li>
-            <li>À taper depuis le pseudo Rumble que vous voulez lier.</li>
+            <li>Usage unique, à taper depuis le pseudo Rumble à lier.</li>
+            <li>Hors live, le bot ne peut pas valider : le code sera perdu.</li>
           </ul>
 
           <button
