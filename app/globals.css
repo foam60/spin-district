@@ -7364,12 +7364,18 @@ article[id] {
   }
 }
 
-/* Quatre casinos : `auto-fit` produisait 3 colonnes puis une carte seule sur
-   la ligne suivante. Deux colonnes donnent une grille 2×2 équilibrée, et
-   laissent de la place aux cartes détaillées de /casinos. */
+/* `auto-fit` produisait 3 colonnes puis une carte seule sur la ligne
+   suivante. Deux colonnes donnent une grille équilibrée et laissent de la
+   place aux cartes détaillées de /casinos. */
 @media (min-width: 993px) {
   .casino-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Nombre impair de casinos : la dernière carte prend toute la ligne au
+     lieu de laisser une demi-largeur vide à côté d'elle. */
+  .casino-grid > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
   }
 }
 

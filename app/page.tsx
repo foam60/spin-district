@@ -6,7 +6,7 @@ import ScrollTopButton from './components/ScrollTopButton';
 import SiteFooter from './components/SiteFooter';
 import SiteHeader from './components/SiteHeader';
 import { ArrowIcon, DiscordIcon, RumbleIcon, StakeMark, TelegramIcon } from './components/BrandIcons';
-import { links, siteUrl } from './lib/site';
+import { casinos, links, siteUrl } from './lib/site';
 
 /**
  * Donnees structurees propres a la page d'accueil : l'outil (WebApplication)
@@ -41,7 +41,7 @@ const homeJsonLd = {
           name: 'Quel casino partenaire choisir ?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Fieryplay pour le plus gros pack de bienvenue (jusqu’à 2 500 € et 525 tours gratuits), Celsius pour le premier dépôt remboursé, Stake pour la durée (Originals, rakeback), Zeppelin pour ses 100 tours gratuits sans dépôt sur Gates of Olympus.',
+            text: 'Fieryplay pour le plus gros pack de bienvenue (jusqu’à 2 500 € et 525 tours gratuits), HugoBets pour un bonus de 1 000 € annoncé sans conditions de mise, Celsius pour le premier dépôt remboursé, Stake pour la durée (Originals, rakeback), Zeppelin pour ses 100 tours gratuits sans dépôt sur Gates of Olympus.',
           },
         },
         {
@@ -136,7 +136,8 @@ export default function Home() {
 
           <div className="hero-trust-bar">
             <div className="trust-item">
-              <strong>4</strong>
+              {/* Dérivé du catalogue : le chiffre suivait mal les ajouts. */}
+              <strong>{casinos.length}</strong>
               <span>Casinos partenaires</span>
             </div>
             <div className="trust-separator" />
@@ -265,7 +266,8 @@ export default function Home() {
             </h2>
           </div>
           <p>
-            Quatre casinos testés en live. <strong>Fieryplay</strong> pour le plus gros pack,{' '}
+            Cinq casinos testés en live. <strong>Fieryplay</strong> pour le plus gros pack,{' '}
+            <strong>HugoBets</strong> pour un bonus <strong>sans wager</strong>,{' '}
             <strong>Zeppelin</strong> pour 100 tours gratuits <strong>sans dépôt</strong>.
           </p>
         </div>
@@ -555,7 +557,8 @@ export default function Home() {
             </summary>
             <div className="faq-answer">
               <p>
-                Fieryplay pour le plus gros pack (jusqu’à 2 500 € + 525 tours*), Celsius pour le
+                Fieryplay pour le plus gros pack (jusqu’à 2 500 € + 525 tours*), HugoBets pour
+                1 000 € de bonus annoncé <strong>sans conditions de mise</strong>, Celsius pour le
                 1er dépôt remboursé, Stake pour la durée, Zeppelin pour 100 tours gratuits{' '}
                 <strong>sans dépôt</strong> sur Gates of Olympus*.{' '}
                 <Link href="/casinos" className="faq-link">

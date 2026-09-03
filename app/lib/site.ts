@@ -21,13 +21,18 @@ export const links = {
     'https://promo-fieryplay.com/l/6a96a8719ad17ced6a0dae82?sub_id={sub_id_1}&click_id={click_id}',
   zeppelin:
     process.env.NEXT_PUBLIC_ZEPPELIN_AFFILIATE_URL ?? 'https://zplncheck.com/r/GCRG5VCF',
+  // Redirige vers hugobets.com/fr/register (vérifié). Aucune macro à
+  // substituer : l’identifiant d’affiliation est le GUID du chemin.
+  hugobets:
+    process.env.NEXT_PUBLIC_HUGOBETS_AFFILIATE_URL ??
+    'https://partners.hbetpartners.com/v2/text/18/26/f678d9d1-9a90-11f1-a1b8-f6136488bd8f/1',
   discord: process.env.NEXT_PUBLIC_DISCORD_URL ?? 'https://discord.gg/ytMWdgCPNF',
   telegram: process.env.NEXT_PUBLIC_TELEGRAM_URL ?? 'https://t.me/+rXPQXhTaEKZjMjc0',
   stream: process.env.NEXT_PUBLIC_STREAM_URL ?? 'https://rumble.com/c/c-7946190?e9s=src_v1_cbl',
   helpline: 'https://www.joueurs-info-service.fr/',
 } as const;
 
-export type CasinoSlug = 'celsius' | 'stake' | 'fieryplay' | 'zeppelin';
+export type CasinoSlug = 'celsius' | 'stake' | 'fieryplay' | 'zeppelin' | 'hugobets';
 
 /** Un palier de dépôt : « à partir de 10 € → 200 % + 100 tours ». */
 export type BonusTier = {
@@ -53,6 +58,19 @@ export type Casino = {
   highlight: string;
   /** Chemin d'un logo dans /public, ou 'mark' pour le monogramme dessiné. */
   logo: string | 'mark';
+  /**
+   * Forme du logo. Un `wordmark` porte le nom écrit : il s’affiche à hauteur
+   * fixe et remplace le titre visible. Une `icon` est carrée et s’affiche à
+   * côté du nom. Déduit auparavant de l’extension `.svg`, ce qui excluait
+   * d’office tout logo raster.
+   */
+  logoKind?: 'wordmark' | 'icon';
+  /**
+   * Largeur intrinsèque du logo ramenée à 44 px de haut. Les ratios vont de
+   * 2:1 à 5,8:1 : sans cette valeur, `next/image` demandait une source trop
+   * étroite pour les logos très allongés.
+   */
+  logoWidth?: number;
   /** Champs optionnels : laissés vides quand l'information n'est pas vérifiée. */
   currencies?: string;
   payout?: string;
@@ -75,6 +93,7 @@ export const casinos: Casino[] = [
     surface: 'linear-gradient(150deg, #0d1710 0%, #060a07 100%)',
     highlight: 'Jusqu’à 550 % de bonus + 1er dépôt de 20 € remboursé*',
     logo: '/celsius-icon.webp',
+    logoKind: 'icon',
     currencies: 'Crypto & cartes bancaires',
     payout: 'Retraits crypto rapides',
     vibe: 'Bonus de bienvenue le plus généreux',
@@ -131,6 +150,8 @@ export const casinos: Casino[] = [
     surface: 'linear-gradient(150deg, #2a1211 0%, #140909 100%)',
     highlight: 'Jusqu’à 2 500 € + 525 tours gratuits de bonus de bienvenue*',
     logo: '/fieryplay-logo.svg',
+    logoKind: 'wordmark',
+    logoWidth: 89,
     vibe: 'Pack sur 5 dépôts, dès 10 €',
     perks: [
       {
@@ -227,6 +248,8 @@ export const casinos: Casino[] = [
     surface: 'linear-gradient(150deg, #2a1030 0%, #14071a 100%)',
     highlight: '100 tours gratuits sur Gates of Olympus, SANS dépôt*',
     logo: '/zeppelin-logo.svg',
+    logoKind: 'wordmark',
+    logoWidth: 116,
     vibe: 'Le seul à offrir des tours sans dépôt',
     perks: [
       {
@@ -243,7 +266,7 @@ export const casinos: Casino[] = [
       },
     ],
     strengths: [
-      'Le seul des quatre à offrir des tours gratuits sans aucun dépôt',
+      'Le seul de nos partenaires à offrir des tours gratuits sans aucun dépôt',
       'Aucun risque financier pour essayer : rien à déposer',
       'Animations récurrentes (roue quotidienne, check-in) également sans dépôt',
       'Interface en français, jeux crash et Originals inclus',
@@ -254,6 +277,91 @@ export const casinos: Casino[] = [
       'Pas de package multi-dépôts comme chez Fieryplay ou Celsius',
       'Opérateur hors licence ANJ : la réglementation française ne s’applique pas',
     ],
+  },
+  {
+    slug: 'hugobets',
+    name: 'HugoBets',
+    tagline: 'Bonus sans conditions de mise',
+    url: links.hugobets,
+    accent: '#14d7e1',
+    accentSoft: 'rgba(20, 215, 225, 0.16)',
+    surface: 'linear-gradient(150deg, #0a262b 0%, #051315 100%)',
+    highlight: 'Jusqu’à 1 000 € + 150 tours gratuits, sans conditions de mise*',
+    logo: '/hugobets-logo.webp',
+    logoKind: 'wordmark',
+    logoWidth: 257,
+    // Catégories relevées dans le catalogue de paiement de l'opérateur. Les
+    // seuils de retrait varient de 0 à 500 € selon la méthode : aucun chiffre
+    // unique ne serait honnête, donc `payout` reste vide.
+    currencies: 'Cartes, virement, e-wallets et crypto (EUR)',
+    vibe: 'Gains du bonus retirables tout de suite',
+    perks: [
+      {
+        title: '1 000 € de bonus sans wager*',
+        detail: 'Trois dépôts bonifiés à 100 % : 300 €, puis 350 €, puis 350 €.',
+      },
+      {
+        title: '150 tours gratuits*',
+        detail: '50 sur Book of Dead, 50 sur Le Bandit, 50 sur Fire in the Hole 3.',
+      },
+      {
+        title: 'Slots, casino live et paris sportifs',
+        detail: 'Catalogue mixte, interface en français, support annoncé 24/7.',
+      },
+    ],
+    strengths: [
+      'Le seul de nos partenaires dont le bonus est annoncé sans conditions de mise',
+      'Ce que le bonus rapporte est retirable sans devoir le rejouer',
+      'Trois dépôts à 100 % sans palier dégressif : le taux ne baisse jamais',
+      'Tours gratuits sur des machines connues (Play’n GO, Hacksaw, Nolimit City)',
+    ],
+    watchouts: [
+      'Le dépôt minimum de chaque palier n’est pas publié : vérifiez-le avant de déposer',
+      'La durée de validité des tours gratuits n’est pas communiquée',
+      '« Sans conditions de mise » est l’annonce de l’opérateur : lisez ses CGU',
+      'Opérateur hors licence ANJ : la réglementation française ne s’applique pas',
+    ],
+    welcomePackage: {
+      total: 'Jusqu’à 1 000 € de bonus + 150 tours gratuits, tous annoncés sans conditions de mise',
+      steps: [
+        {
+          label: '1er dépôt',
+          tiers: [
+            {
+              minDeposit: '—',
+              bonus: '100 %',
+              cap: 'jusqu’à 300 €, sans wager',
+              spins: '50 tours',
+              slot: 'Book of Dead',
+            },
+          ],
+        },
+        {
+          label: '2e dépôt',
+          tiers: [
+            {
+              minDeposit: '—',
+              bonus: '100 %',
+              cap: 'jusqu’à 350 €, sans wager',
+              spins: '50 tours',
+              slot: 'Le Bandit',
+            },
+          ],
+        },
+        {
+          label: '3e dépôt',
+          tiers: [
+            {
+              minDeposit: '—',
+              bonus: '100 %',
+              cap: 'jusqu’à 350 €, sans wager',
+              spins: '50 tours',
+              slot: 'Fire in the Hole 3',
+            },
+          ],
+        },
+      ],
+    },
   },
 ];
 

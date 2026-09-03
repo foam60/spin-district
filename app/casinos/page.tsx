@@ -5,9 +5,9 @@ import PageShell from '../components/PageShell';
 import { ArrowIcon } from '../components/BrandIcons';
 import { casinos, siteUrl, type Casino } from '../lib/site';
 
-const title = 'Casinos partenaires 2026 : Stake, Celsius, Fieryplay et Zeppelin';
+const title = 'Casinos partenaires 2026 : Fieryplay, HugoBets, Stake, Celsius, Zeppelin';
 const description =
-  'Comparatif des casinos partenaires de Spin District : Stake, Celsius Casino, Fieryplay (jusqu’à 2 500 € + 525 tours gratuits) et Zeppelin (100 tours gratuits sans dépôt sur Gates of Olympus). Offres, points forts et limites. 18+.';
+  'Comparatif des 5 casinos partenaires de Spin District : Fieryplay (jusqu’à 2 500 € + 525 tours gratuits), HugoBets (1 000 € sans conditions de mise + 150 tours), Celsius Casino (1er dépôt remboursé), Stake et Zeppelin (100 tours gratuits sans dépôt). Offres, points forts et limites. 18+.';
 
 export const metadata: Metadata = {
   title,
@@ -59,7 +59,7 @@ export default function CasinosPage() {
       eyebrow="COMPARATIF — CASINOS PARTENAIRES"
       title={
         <>
-          QUATRE CASINOS
+          CINQ CASINOS
           <br />
           <span className="gradient-text">LEQUEL POUR TOI ?</span>
         </>
@@ -67,10 +67,11 @@ export default function CasinosPage() {
       intro={
         <>
           <p>
-            Quatre casinos, pas trente : <strong>Fieryplay</strong> pour le plus gros pack de
-            bienvenue, <strong>Celsius</strong> pour le premier dépôt remboursé,{' '}
-            <strong>Stake</strong> pour les Originals et le VIP, <strong>Zeppelin</strong> pour ses
-            100 tours gratuits sans dépôt sur Gates of Olympus.
+            Cinq casinos, pas trente : <strong>Fieryplay</strong> pour le plus gros pack de
+            bienvenue, <strong>HugoBets</strong> pour un bonus sans conditions de mise,{' '}
+            <strong>Celsius</strong> pour le premier dépôt remboursé, <strong>Stake</strong> pour
+            les Originals et le VIP, <strong>Zeppelin</strong> pour ses 100 tours gratuits sans
+            dépôt sur Gates of Olympus.
           </p>
           <p className="page-hero-note">
             Liens partenaires • 18+ • Aucun de ces opérateurs ne détient d’agrément ANJ en France

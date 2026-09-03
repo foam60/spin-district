@@ -5,14 +5,15 @@ import { ArrowIcon, StakeMark } from './BrandIcons';
 
 function CasinoLogo({ casino }: { casino: Casino }) {
   if (casino.logo === 'mark') return <StakeMark size={44} />;
-  // Les logos officiels sont des SVG larges : on les affiche à hauteur fixe
-  // plutôt que dans un carré, pour ne pas les écraser.
-  const isWordmark = casino.logo.endsWith('.svg');
+  // Un logo portant le nom écrit s’affiche à hauteur fixe plutôt que dans un
+  // carré, sinon il est écrasé. `logoWidth` donne son ratio réel, qui va de
+  // 2:1 à près de 6:1 selon la marque.
+  const isWordmark = casino.logoKind === 'wordmark';
   return (
     <Image
       src={casino.logo}
       alt=""
-      width={isWordmark ? 132 : 44}
+      width={isWordmark ? (casino.logoWidth ?? 132) : 44}
       height={44}
       className={isWordmark ? 'casino-wordmark' : undefined}
       style={isWordmark ? undefined : { borderRadius: 10 }}
@@ -43,7 +44,7 @@ export function CasinoCard({
         <div className="casino-identity">
           <CasinoLogo casino={casino} />
           <div>
-            <h3 className={casino.logo.endsWith('.svg') ? 'sr-only' : undefined}>{casino.name}</h3>
+            <h3 className={casino.logoKind === 'wordmark' ? 'sr-only' : undefined}>{casino.name}</h3>
             <small>{casino.tagline}</small>
           </div>
         </div>
