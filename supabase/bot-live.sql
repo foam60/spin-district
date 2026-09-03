@@ -103,12 +103,16 @@ begin
       using errcode = '42501';
   end if;
 
-  -- Sans clause `where` : la table est un singleton, et l'ancienne version
-  -- ne mettait à jour que la ligne `id = 1`.
+  -- La clause `where` est obligatoire : l'extension `safeupdate`, active
+  -- dans l'éditeur SQL de Supabase, refuse tout UPDATE sans filtre.
+  -- On cible la ligne du singleton par son identifiant réel plutôt que
+  -- par `id = 1` : une identité `generated always` repart de 2 après une
+  -- suppression, et la mise à jour ne trouvait alors plus rien.
   update public.bot_config
      set is_live    = p_is_live,
          updated_at = now(),
-         updated_by = auth.uid();
+         updated_by = auth.uid()
+   where id = (select c.id from public.bot_config c order by c.id limit 1);
 
   if not found then
     insert into public.bot_config (is_live, updated_at, updated_by)
