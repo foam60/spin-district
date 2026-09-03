@@ -7585,3 +7585,198 @@ article[id] {
     margin-bottom: 10px;
   }
 }
+
+/* =========================================================================
+   INTERRUPTEUR DU BOT RUMBLE (console d'administration)
+   ========================================================================= */
+
+.bot-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 26px;
+  padding: 20px 24px;
+  border: 1px solid var(--panel-border);
+  border-left: 3px solid var(--muted);
+  border-radius: 0 14px 14px 0;
+  background: rgba(10, 17, 13, 0.72);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.bot-switch.is-live {
+  border-left-color: var(--green);
+  background: linear-gradient(120deg, rgba(168, 255, 0, 0.07), rgba(10, 17, 13, 0.78));
+}
+
+.bot-switch.is-off {
+  border-left-color: #6d7671;
+}
+
+.bot-switch.is-unavailable {
+  border-left-color: #ffb020;
+  background: rgba(255, 176, 32, 0.07);
+}
+
+.bot-switch-text {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.bot-switch-text h2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin: 0 0 6px;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+}
+
+.bot-switch-state {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.bot-switch.is-live .bot-switch-state {
+  background: rgba(168, 255, 0, 0.14);
+  color: var(--green);
+}
+
+/* Le point reprend celui des cartes casino, mais gris quand le bot dort :
+   la couleur seule ne doit pas porter l'information, d'où le libellé. */
+.bot-switch-state .status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #6d7671;
+  box-shadow: none;
+}
+
+.bot-switch.is-live .bot-switch-state .status-dot {
+  background: var(--green);
+  box-shadow: 0 0 9px var(--green);
+}
+
+.bot-switch-text p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.bot-switch-meta {
+  margin-top: 6px !important;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+.bot-switch-control {
+  flex: 0 0 auto;
+}
+
+.bot-switch-btn {
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 20px;
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--white);
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bot-switch-btn:hover:not(:disabled) {
+  border-color: var(--green);
+  background: rgba(168, 255, 0, 0.1);
+}
+
+.bot-switch-btn:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+/* Rail + pastille : le repère visuel de l'état, doublé par le libellé. */
+.bot-switch-track {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  transition: background 0.22s ease;
+}
+
+.bot-switch-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #9aa39d;
+  transition: transform 0.22s ease, background 0.22s ease;
+}
+
+.bot-switch-btn[aria-pressed='true'] .bot-switch-track {
+  background: rgba(168, 255, 0, 0.32);
+}
+
+.bot-switch-btn[aria-pressed='true'] .bot-switch-knob {
+  transform: translateX(18px);
+  background: var(--green);
+}
+
+.bot-switch-btn:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
+.bot-switch-error {
+  margin: 10px 0 0;
+  max-width: 280px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #ff6b6b;
+}
+
+@media (max-width: 640px) {
+  .bot-switch {
+    padding: 16px 18px;
+  }
+
+  .bot-switch-control,
+  .bot-switch-btn {
+    width: 100%;
+  }
+
+  .bot-switch-btn {
+    justify-content: center;
+  }
+
+  .bot-switch-error {
+    max-width: none;
+  }
+}

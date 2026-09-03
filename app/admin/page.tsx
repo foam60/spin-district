@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import AdminDashboard from '../components/AdminDashboard';
+import BotLiveToggle, { type BotLive } from '../components/BotLiveToggle';
 import PageShell from '../components/PageShell';
 import { ArrowIcon } from '../components/BrandIcons';
 import { ADMIN_FALLBACK_EMAIL, SETUP_HINT, type Member, type Ticket } from '../lib/tickets';
@@ -45,7 +46,7 @@ export default async function AdminPage() {
         crumbs={[{ name: 'Administration', path: '/admin' }]}
       >
         <section className="page-section prose alert-box">
-          <h2>Trois scripts à exécuter, dans cet ordre</h2>
+          <h2>Quatre scripts à exécuter, dans cet ordre</h2>
           <ol>
             <li>
               <code>supabase/00-mapping.sql</code> — détecte les colonnes réelles de{' '}
@@ -59,6 +60,10 @@ export default async function AdminPage() {
               <code>supabase/tickets.sql</code> — tickets, bucket privé des preuves de dépôt et
               whitelist d’administrateurs (déjà initialisée avec{' '}
               <strong>{ADMIN_FALLBACK_EMAIL}</strong>).
+            </li>
+            <li>
+              <code>supabase/bot-live.sql</code> — interrupteur du bot Rumble, réservé à cette
+              whitelist.
             </li>
           </ol>
           <p>
@@ -82,13 +87,15 @@ export default async function AdminPage() {
 
   // Les erreurs sont conservées : une liste vide sans explication est
   // indébogable — c'est exactement ce qui affichait « Membres 0 ».
-  const [ticketsRes, membersRes, countsRes, selfTestRes, columnsRes] = await Promise.all([
-    supabase.rpc('admin_list_tickets', { p_status: null }),
-    supabase.rpc('admin_list_members'),
-    supabase.rpc('admin_ticket_counts'),
-    supabase.rpc('sd_selftest'),
-    supabase.rpc('sd_columns_report'),
-  ]);
+  const [ticketsRes, membersRes, countsRes, selfTestRes, columnsRes, botRes] =
+    await Promise.all([
+      supabase.rpc('admin_list_tickets', { p_status: null }),
+      supabase.rpc('admin_list_members'),
+      supabase.rpc('admin_ticket_counts'),
+      supabase.rpc('sd_selftest'),
+      supabase.rpc('sd_columns_report'),
+      supabase.rpc('bot_live_status'),
+    ]);
 
   const failures = [
     ['admin_list_tickets', ticketsRes.error?.message],
@@ -96,6 +103,15 @@ export default async function AdminPage() {
     ['admin_ticket_counts', countsRes.error?.message],
     ['sd_selftest', selfTestRes.error?.message],
   ].filter((entry): entry is [string, string] => Boolean(entry[1]));
+
+  // L'interrupteur du bot vit dans un script à part : son absence n'est pas
+  // une erreur de la console, on affiche la marche à suivre à sa place.
+  const botStatus = ((botRes.data ?? []) as BotLive[])[0] ?? null;
+  const botUnavailable = botRes.error
+    ? botRes.error.code === 'PGRST202' || botRes.error.code === '42883'
+      ? 'Exécutez supabase/bot-live.sql dans Supabase pour piloter le bot depuis cette page.'
+      : botRes.error.message
+    : undefined;
 
   const tickets = (ticketsRes.data ?? []) as Ticket[];
   const members = (membersRes.data ?? []) as Member[];
@@ -205,6 +221,8 @@ export default async function AdminPage() {
           )}
         </section>
       )}
+
+      <BotLiveToggle status={botStatus} unavailable={botUnavailable} />
 
       <AdminDashboard tickets={tickets} members={members} counts={countMap} />
     </PageShell>
